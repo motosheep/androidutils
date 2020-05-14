@@ -17,13 +17,13 @@ public class TestAdapter extends RecyclerView.Adapter {
     List<String> contentList = new ArrayList<>();
 
     public TestAdapter(){
-        contentList.add("1");
-        contentList.add("2");
-        contentList.add("3");
-        contentList.add("4");
-        contentList.add("5");
-        contentList.add("6");
-        contentList.add("7");
+
+    }
+
+
+    public void add(List<String>data){
+        contentList.addAll(data);
+        notifyDataSetChanged();
     }
     @NonNull
     @Override

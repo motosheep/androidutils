@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".recyclerview.test.XRecyActivity">
 
-    <com.north.light.androidutils.recyclerview.x.XRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:overScrollMode="never"
         android:id="@+id/test_recy"
         android:layout_width="match_parent"
