@@ -23,6 +23,12 @@
             android:text="xrecyclerview" />
 
 
+        <com.north.light.androidutils.textview.VerticalScrollTxView
+            android:id="@+id/scrollText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
