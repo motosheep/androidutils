@@ -11,22 +11,27 @@
         android:orientation="vertical">
 
         <TextView
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_margin="5dp"
-            android:background="@color/colorPrimary"
-            android:textColor="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:onClick="xrecyclerview"
-            android:text="xrecyclerview" />
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="xrecyclerview"
+            android:textColor="#ffffff" />
 
 
         <com.north.light.androidutils.textview.VerticalScrollTxView
             android:id="@+id/scrollText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
+        <com.north.light.androidutils.textview.FlowLayout
+            android:id="@+id/flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>

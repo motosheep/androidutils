@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.north.light.androidutils.recyclerview.test.XRecyActivity;
+import com.north.light.androidutils.textview.FlowLayout;
 import com.north.light.androidutils.textview.VerticalScrollTxView;
 
 import java.util.ArrayList;
@@ -25,6 +26,26 @@ public class MainActivity extends AppCompatActivity {
             mShowList.add("位置: " + i);
         }
         scrollTxView.setTextList(mShowList);
+
+        //流式布局
+        FlowLayout flowLayout = findViewById(R.id.flowlayout);
+        List<String> list = new ArrayList<>();
+        list.add("java");
+        list.add("javaEE");
+        list.add("javaME");
+        list.add("c");
+        list.add("php");
+        list.add("ios");
+        list.add("c++");
+        list.add("c#");
+        list.add("Android");
+        flowLayout.setAlignByCenter(FlowLayout.AlienState.LEFT);
+        flowLayout.setAdapter(list, R.layout.flow_item, new FlowLayout.ItemView<String>() {
+            @Override
+            public void getCover(String item, FlowLayout.ViewHolder holder, View inflate, int position) {
+                holder.setText(R.id.tv_label_name,item);
+            }
+        });
     }
 
 
