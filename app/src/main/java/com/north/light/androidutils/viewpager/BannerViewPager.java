@@ -1,8 +1,9 @@
 package com.north.light.androidutils.viewpager;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,11 +26,15 @@ import java.util.List;
 public class BannerViewPager extends RelativeLayout {
     private static final String TAG = BannerViewPager.class.getSimpleName();
     //自动更新的looper
-    private Handler mRefreshHandler = new Handler();
+    private Handler mRefreshHandler;
     //view list
     private List<ImageView> mPicList = new ArrayList<>();
     //view pager
     private ViewPager mViewPager;
+    //自动轮播标识
+    private volatile boolean mAotoRun = true;
+    private final int TAG_RUN = 0x0001;
+    private int mAutoRunDelay = 2000;//滚动的时间间隔(毫秒)
 
     public BannerViewPager(Context context) {
         this(context, null);
@@ -53,13 +58,94 @@ public class BannerViewPager extends RelativeLayout {
         params.width = LayoutParams.MATCH_PARENT;
         params.height = LayoutParams.MATCH_PARENT;
         mViewPager.setLayoutParams(params);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                switchRun(false);
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                switchRun(true);
+            }
+        });
+        //handler初始化
+        mRefreshHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case TAG_RUN:
+                        //启动
+                        if (mAotoRun) {
+                            //viewpager自动滚动
+                            viewpagerScroll(true);
+                            switchRun(true);
+                        } else {
+                            //停止
+                            switchRun(false);
+                        }
+                        break;
+                }
+            }
+        };
+    }
+
+    /**
+     * viewpager滚动
+     */
+    private void viewpagerScroll(boolean tag) {
+        if (mViewPager == null) return;
+        try {
+            if (tag) {
+                int curPos = mViewPager.getCurrentItem();
+                int tolPos = mPicList.size();
+                if (curPos < tolPos - 1) {
+                    //继续向右滑动
+                    mViewPager.setCurrentItem(++curPos, true);
+                } else {
+                    //回到第一个
+                    mViewPager.setCurrentItem(0);
+                }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "viewpagerScroll: " + e);
+        }
+    }
+
+    /**
+     * 设置滚动的时间间隔
+     */
+    public void setRunDelay(int time) {
+        this.mAutoRunDelay = time;
+        if (mRefreshHandler != null) {
+            mRefreshHandler.sendEmptyMessageDelayed(TAG_RUN, 10);
+        }
+    }
+
+    /**
+     * 暂停or启动自动轮播
+     */
+    public void switchRun(boolean run) {
+        this.mAotoRun = run;
+        if (mRefreshHandler != null) {
+            if (mAotoRun) {
+                mRefreshHandler.sendEmptyMessageDelayed(TAG_RUN, mAutoRunDelay);
+            } else {
+                mRefreshHandler.removeCallbacksAndMessages(null);
+            }
+        }
     }
 
     /**
      * 设置结果监听
      */
     public interface LoadImageListener {
-        void LoadImage(String pic, ImageView url);
+        void LoadImage(String url, ImageView pic);
     }
 
     /**
@@ -117,24 +203,30 @@ public class BannerViewPager extends RelativeLayout {
                     return new ImageView(getContext());
                 }
             });
+            switchRun(true);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mRefreshHandler == null) {
-            mRefreshHandler = new Handler();
-        }
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
         if (mRefreshHandler != null) {
             mRefreshHandler.removeCallbacksAndMessages(null);
             mRefreshHandler = null;
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mRefreshHandler == null) {
+            mRefreshHandler = new Handler();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        switchRun(hasWindowFocus);
+    }
 }
