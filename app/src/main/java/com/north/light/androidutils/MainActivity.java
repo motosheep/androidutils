@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setImageView(a, new BannerViewPager.LoadImageListener() {
             @Override
             public void LoadImage(String url, ImageView pic) {
+                pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(MainActivity.this).load(url).override(200, 200).into(pic);
             }
         });

@@ -9,10 +9,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.north.light.androidutils.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,9 @@ public class BannerViewPager extends RelativeLayout {
     private volatile boolean mAotoRun = true;
     private final int TAG_RUN = 0x0001;
     private int mAutoRunDelay = 2000;//滚动的时间间隔(毫秒)
+    //指示器
+    private LinearLayout mIndicateLayout;//指示器父布局
+    private List<ImageView> mIndicateImgList = new ArrayList<>();//指示器ImageView List
 
     public BannerViewPager(Context context) {
         this(context, null);
@@ -58,6 +65,17 @@ public class BannerViewPager extends RelativeLayout {
         params.width = LayoutParams.MATCH_PARENT;
         params.height = LayoutParams.MATCH_PARENT;
         mViewPager.setLayoutParams(params);
+        //初始化指示器父布局
+        mIndicateLayout = new LinearLayout(getContext());
+        addView(mIndicateLayout);
+        RelativeLayout.LayoutParams params2 = (LayoutParams) mIndicateLayout.getLayoutParams();
+        params2.width = LayoutParams.MATCH_PARENT;
+        params2.height = LayoutParams.WRAP_CONTENT;
+        params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mIndicateLayout.setLayoutParams(params2);
+        mIndicateLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mIndicateLayout.setGravity(Gravity.CENTER);
+        //滑动监听
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -71,6 +89,7 @@ public class BannerViewPager extends RelativeLayout {
             @Override
             public void onPageScrollStateChanged(int i) {
                 switchRun(true);
+                updateIndicate(mViewPager.getCurrentItem());
             }
         });
         //handler初始化
@@ -131,6 +150,7 @@ public class BannerViewPager extends RelativeLayout {
      * 暂停or启动自动轮播
      */
     public void switchRun(boolean run) {
+        if (mAotoRun == run) return;
         this.mAotoRun = run;
         if (mRefreshHandler != null) {
             if (mAotoRun) {
@@ -203,7 +223,54 @@ public class BannerViewPager extends RelativeLayout {
                     return new ImageView(getContext());
                 }
             });
+            setIndicate(mPicList.size());
             switchRun(true);
+        }
+    }
+
+    /**
+     * 指示器的圆点创建
+     */
+    private void setIndicate(int size) {
+        if (mIndicateLayout != null) {
+            //插入指示器布局
+            mIndicateImgList.clear();
+            for (int i = 0; i < size; i++) {
+                ImageView point = new ImageView(mIndicateLayout.getContext());
+                mIndicateLayout.addView(point);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) point.getLayoutParams();
+                params.width = 20;
+                params.height = 20;
+                params.leftMargin = 2;
+                params.rightMargin = 2;
+                params.bottomMargin = 4;
+                params.topMargin = 4;
+                point.setLayoutParams(params);
+                if (i == 0) {
+                    point.setImageResource(R.drawable.shape_banner_sel_banner);
+                } else {
+                    point.setImageResource(R.drawable.shape_banner_unsel_banner);
+                }
+                mIndicateImgList.add(point);
+            }
+        }
+    }
+
+    /**
+     * 设置指示器的颜色
+     */
+    private void updateIndicate(int pos) {
+        if (pos > mIndicateImgList.size() - 1) return;
+        try {
+            for (int i = 0; i < mIndicateImgList.size(); i++) {
+                if (i == pos) {
+                    mIndicateImgList.get(i).setImageResource(R.drawable.shape_banner_sel_banner);
+                } else {
+                    mIndicateImgList.get(i).setImageResource(R.drawable.shape_banner_unsel_banner);
+                }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "updateIndicate: " + e);
         }
     }
 
