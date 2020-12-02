@@ -27,7 +27,7 @@ import java.util.List;
  * time 2020/8/3
  * 描述：banner viewpager
  */
-public class BannerViewPager extends RelativeLayout {
+public class BannerViewPager extends RelativeLayout  {
     private static final String TAG = BannerViewPager.class.getSimpleName();
     //自动更新的looper
     private Handler mRefreshHandler;
@@ -35,13 +35,16 @@ public class BannerViewPager extends RelativeLayout {
     private List<ImageView> mPicList = new ArrayList<>();
     //view pager
     private ViewPager mViewPager;
-    //自动轮播标识
-    private volatile boolean mAotoRun = true;
     private final int TAG_RUN = 0x0001;
-    private int mAutoRunDelay = 2000;//滚动的时间间隔(毫秒)
+    private int mAutoRunDelay = 5000;//滚动的时间间隔(毫秒)
     //指示器
     private LinearLayout mIndicateLayout;//指示器父布局
     private List<ImageView> mIndicateImgList = new ArrayList<>();//指示器ImageView List
+    //监听事件
+    private onClickListener mListener;
+    //是否触摸的标识
+    private boolean isTouch = false;
+    private boolean isResetData = false;
 
     public BannerViewPager(Context context) {
         this(context, null);
@@ -61,25 +64,28 @@ public class BannerViewPager extends RelativeLayout {
         //初始化插入viewPager布局
         mViewPager = new ViewPager(getContext());
         addView(mViewPager);
-        RelativeLayout.LayoutParams params = (LayoutParams) mViewPager.getLayoutParams();
+        LayoutParams params = (LayoutParams) mViewPager.getLayoutParams();
         params.width = LayoutParams.MATCH_PARENT;
         params.height = LayoutParams.MATCH_PARENT;
         mViewPager.setLayoutParams(params);
         //初始化指示器父布局
         mIndicateLayout = new LinearLayout(getContext());
         addView(mIndicateLayout);
-        RelativeLayout.LayoutParams params2 = (LayoutParams) mIndicateLayout.getLayoutParams();
+        LayoutParams params2 = (LayoutParams) mIndicateLayout.getLayoutParams();
         params2.width = LayoutParams.MATCH_PARENT;
         params2.height = LayoutParams.WRAP_CONTENT;
         params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         mIndicateLayout.setLayoutParams(params2);
         mIndicateLayout.setOrientation(LinearLayout.HORIZONTAL);
         mIndicateLayout.setGravity(Gravity.CENTER);
-        //滑动监听
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                switchRun(false);
+                if (!isResetData) {
+                    isTouch = true;
+                } else {
+                    isResetData = false;
+                }
             }
 
             @Override
@@ -88,7 +94,7 @@ public class BannerViewPager extends RelativeLayout {
 
             @Override
             public void onPageScrollStateChanged(int i) {
-                switchRun(true);
+                isTouch = false;
                 updateIndicate(mViewPager.getCurrentItem());
             }
         });
@@ -99,26 +105,40 @@ public class BannerViewPager extends RelativeLayout {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case TAG_RUN:
-                        //启动
-                        if (mAotoRun) {
-                            //viewpager自动滚动
+                        //viewpager自动滚动
+                        if (!isTouch) {
                             viewpagerScroll(true);
-                            switchRun(true);
-                        } else {
-                            //停止
-                            switchRun(false);
                         }
+                        start();
                         break;
                 }
             }
         };
     }
 
+
+    /**
+     * 是否显示指示器
+     */
+    public void showIndicate(boolean isShow) {
+        try {
+            if (isShow) {
+                mIndicateLayout.setVisibility(View.VISIBLE);
+            } else {
+                mIndicateLayout.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "updateIndicate: " + e);
+        }
+    }
+
     /**
      * viewpager滚动
      */
     private void viewpagerScroll(boolean tag) {
-        if (mViewPager == null) return;
+        if (mViewPager == null) {
+            return;
+        }
         try {
             if (tag) {
                 int curPos = mViewPager.getCurrentItem();
@@ -142,6 +162,7 @@ public class BannerViewPager extends RelativeLayout {
     public void setRunDelay(int time) {
         this.mAutoRunDelay = time;
         if (mRefreshHandler != null) {
+            mRefreshHandler.removeCallbacksAndMessages(null);
             mRefreshHandler.sendEmptyMessageDelayed(TAG_RUN, 10);
         }
     }
@@ -149,15 +170,10 @@ public class BannerViewPager extends RelativeLayout {
     /**
      * 暂停or启动自动轮播
      */
-    public void switchRun(boolean run) {
-        if (mAotoRun == run) return;
-        this.mAotoRun = run;
+    public void start() {
         if (mRefreshHandler != null) {
-            if (mAotoRun) {
-                mRefreshHandler.sendEmptyMessageDelayed(TAG_RUN, mAutoRunDelay);
-            } else {
-                mRefreshHandler.removeCallbacksAndMessages(null);
-            }
+            mRefreshHandler.removeCallbacksAndMessages(null);
+            mRefreshHandler.sendEmptyMessageDelayed(TAG_RUN, mAutoRunDelay);
         }
     }
 
@@ -165,19 +181,31 @@ public class BannerViewPager extends RelativeLayout {
      * 设置结果监听
      */
     public interface LoadImageListener {
-        void LoadImage(String url, ImageView pic);
+        void loadImage(String url, ImageView pic);
     }
 
     /**
      * 设置图片，传入String url,返回给外部一个view,一个
      */
     public void setImageView(final List<String> picList, final LoadImageListener loadImageListener) {
+        isResetData = true;
         mPicList.clear();
-        for (String string : picList) {
-            mPicList.add(new ImageView(getContext()));
+        for (int i = 0; i < picList.size(); i++) {
+            ImageView view = new ImageView(getContext());
+            mPicList.add(view);
+            final int finalI = i;
+            final int finalI1 = i;
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.click(finalI, picList.get(finalI1), picList);
+                    }
+                }
+            });
         }
         if (mViewPager != null) {
-            mViewPager.setAdapter(null);
+            mViewPager.removeAllViews();
             mViewPager.setAdapter(new PagerAdapter() {
                 @Override
                 public int getCount() {
@@ -214,7 +242,7 @@ public class BannerViewPager extends RelativeLayout {
                     try {
                         container.addView(mPicList.get(position));
                         if (loadImageListener != null) {
-                            loadImageListener.LoadImage(picList.get(position), mPicList.get(position));
+                            loadImageListener.loadImage(picList.get(position), mPicList.get(position));
                         }
                         return mPicList.get(position);
                     } catch (Exception e) {
@@ -224,9 +252,11 @@ public class BannerViewPager extends RelativeLayout {
                 }
             });
             setIndicate(mPicList.size());
-            switchRun(true);
+            start();
         }
     }
+
+
 
     /**
      * 指示器的圆点创建
@@ -234,17 +264,18 @@ public class BannerViewPager extends RelativeLayout {
     private void setIndicate(int size) {
         if (mIndicateLayout != null) {
             //插入指示器布局
+            mIndicateLayout.removeAllViews();
             mIndicateImgList.clear();
             for (int i = 0; i < size; i++) {
                 ImageView point = new ImageView(mIndicateLayout.getContext());
                 mIndicateLayout.addView(point);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) point.getLayoutParams();
-                params.width = 20;
-                params.height = 20;
+                params.width = 12;
+                params.height = 12;
                 params.leftMargin = 2;
                 params.rightMargin = 2;
-                params.bottomMargin = 4;
-                params.topMargin = 4;
+                params.bottomMargin = 20;
+                params.topMargin = 20;
                 point.setLayoutParams(params);
                 if (i == 0) {
                     point.setImageResource(R.drawable.shape_banner_sel_banner);
@@ -260,7 +291,9 @@ public class BannerViewPager extends RelativeLayout {
      * 设置指示器的颜色
      */
     private void updateIndicate(int pos) {
-        if (pos > mIndicateImgList.size() - 1) return;
+        if (pos > mIndicateImgList.size() - 1) {
+            return;
+        }
         try {
             for (int i = 0; i < mIndicateImgList.size(); i++) {
                 if (i == pos) {
@@ -279,21 +312,30 @@ public class BannerViewPager extends RelativeLayout {
         super.onDetachedFromWindow();
         if (mRefreshHandler != null) {
             mRefreshHandler.removeCallbacksAndMessages(null);
-            mRefreshHandler = null;
         }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (mRefreshHandler == null) {
-            mRefreshHandler = new Handler();
-        }
+        start();
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        switchRun(hasWindowFocus);
+    }
+
+    //监听事件------------------------------------------------
+    public void setOnClickListener(onClickListener listener) {
+        this.mListener = listener;
+    }
+
+    public void removeOnClickListener() {
+        this.mListener = null;
+    }
+
+    public interface onClickListener {
+        void click(int pos, String url, List<String> urlList);
     }
 }

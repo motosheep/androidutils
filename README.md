@@ -25,3 +25,10 @@ androidutils
 
 1增加流式布局控件
 
+
+
+20201202
+
+1增加不可滚动的viewpager
+
+2可设置字体大小的tab layout
