@@ -28,10 +28,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content" />-->
 
-<!--        <com.north.light.androidutils.textview.FlowLayout-->
-<!--            android:id="@+id/flowlayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
+
 
         <com.north.light.androidutils.viewpager.BannerViewPager
             android:layout_width="match_parent"

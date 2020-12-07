@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.north.light.androidutils.recyclerview.test.XRecyActivity;
-import com.north.light.androidutils.textview.FlowLayout;
 import com.north.light.androidutils.textview.VerticalScrollTxView;
 import com.north.light.androidutils.viewpager.BannerViewPager;
 
@@ -32,10 +31,11 @@ public class MainActivity extends AppCompatActivity {
         a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
         viewPager.setImageView(a, new BannerViewPager.LoadImageListener() {
             @Override
-            public void LoadImage(String url, ImageView pic) {
+            public void loadImage(String url, ImageView pic) {
                 pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(MainActivity.this).load(url).override(200, 200).into(pic);
             }
+
         });
 
 //        VerticalScrollTxView scrollTxView = findViewById(R.id.scrollText);
