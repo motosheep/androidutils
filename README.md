@@ -32,3 +32,15 @@ androidutils
 1增加不可滚动的viewpager
 
 2可设置字体大小的tab layout
+
+
+
+20201207
+
+1 mmkv工具类
+
+2 时间接收工具类
+
+3 软件盘适配工具类
+
+4 gson工具类
