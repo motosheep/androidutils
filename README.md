@@ -43,3 +43,20 @@ androidutils
 5 软件前后台判断工具类--ActivityCounter
 
 6 自定义recycleview adapter--BaseScaleAnimAdapter
+
+
+20201209
+
+1 基础service，兼容安卓版本基类--BaseServiceCompat
+
+2 全局异常捕获--MyCatchException
+
+3 属性复制类--BeanUtils
+
+4 控件截屏类--ViewShotUtils
+
+5 进程管理类--ProcessUtil
+
+6 验证码倒计时--CodeTimer
+
+
