@@ -1,6 +1,6 @@
 package com.north.light.androidutils.recyclerview.drag;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by lzt

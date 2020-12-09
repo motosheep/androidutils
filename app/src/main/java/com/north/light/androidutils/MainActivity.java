@@ -3,13 +3,12 @@ package com.north.light.androidutils;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.north.light.androidutils.recyclerview.test.XRecyActivity;
-import com.north.light.androidutils.textview.VerticalScrollTxView;
 import com.north.light.androidutils.viewpager.BannerViewPager;
 
 import java.util.ArrayList;
@@ -21,22 +20,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BannerViewPager viewPager = findViewById(R.id.banner);
-        List<String> a = new ArrayList<>();
-        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
-        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
-        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
-        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
-        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
-        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
-        viewPager.setImageView(a, new BannerViewPager.LoadImageListener() {
-            @Override
-            public void loadImage(String url, ImageView pic) {
-                pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Glide.with(MainActivity.this).load(url).override(200, 200).into(pic);
-            }
 
-        });
+//        BannerViewPager viewPager = findViewById(R.id.banner);
+//        List<String> a = new ArrayList<>();
+//        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
+//        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
+//        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
+//        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
+//        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
+//        a.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596688315897&di=551f51d38487e1a62fbdeec2c00c147b&imgtype=0&src=http%3A%2F%2Fattachments.gfan.com%2Fforum%2F201608%2F04%2F2339412b3z30zbd2j6k652.jpg");
+//        viewPager.setImageView(a, new BannerViewPager.LoadImageListener() {
+//            @Override
+//            public void loadImage(String url, ImageView pic) {
+//                pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                Glide.with(MainActivity.this).load(url).override(200, 200).into(pic);
+//            }
+//        });
 
 //        VerticalScrollTxView scrollTxView = findViewById(R.id.scrollText);
 //        List<String> mShowList = new ArrayList<>();

@@ -1,7 +1,7 @@
 package com.north.light.androidutils.recyclerview.anim
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.animation.LinearInterpolator
 
 /**
@@ -9,7 +9,7 @@ import android.view.animation.LinearInterpolator
  * time 2020/6/8
  * 描述：动画adapter
  */
-abstract class BaseScaleAnimAdapter<W : Any, T : RecyclerView.ViewHolder>(context: Context) : BaseSimpleAdapter<W, T>(context) {
+abstract class BaseScaleAnimAdapter<W : Any, T : androidx.recyclerview.widget.RecyclerView.ViewHolder>(context: Context) : BaseSimpleAdapter<W, T>(context) {
     var scaleAnim = ScaleInAnimation()
 
     private fun addAnimation(holder: T) {

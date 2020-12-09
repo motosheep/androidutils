@@ -1,7 +1,7 @@
 package com.north.light.androidutils.recyclerview.x;
 
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.north.light.androidutils.R;
 
