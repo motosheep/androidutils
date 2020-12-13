@@ -18,6 +18,8 @@ public class MMKVManager implements Serializable {
     private static final String TAG = MMKVManager.class.getSimpleName();
     private Context mContext;
     private MMKV mMMKVObj;
+    //是否初始化标识
+    private boolean hadInit = false;
 
     private static final class SingleHolder {
         static MMKVManager mInstance = new MMKVManager();
@@ -32,10 +34,15 @@ public class MMKVManager implements Serializable {
      */
     public void init(Context context) {
         try {
+            if (hadInit) {
+                return;
+            }
             mContext = context.getApplicationContext();
             MMKV.initialize(mContext);
             mMMKVObj = MMKV.mmkvWithID(DATA_PATH);
+            hadInit = true;
         } catch (Exception e) {
+            hadInit = false;
             Log.d(TAG, "init失败:" + e.getMessage());
         }
     }

@@ -8,12 +8,20 @@ package com.north.light.androidutils.download;
 public interface ProgressBarListener {
     /**
      * 获取文件的长度
+     *
      * @param length
      */
     void getMax(int length);
+
     /**
      * 获取每次下载的长度
+     *
      * @param length
      */
     void getDownload(int length);
+
+    /**
+     * 错误
+     */
+    void error(String msg);
 }

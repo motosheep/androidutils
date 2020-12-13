@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 //        BannerViewPager viewPager = findViewById(R.id.banner);
 //        List<String> a = new ArrayList<>();
 //        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
@@ -69,35 +68,39 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        new DownloadManager().download("https://pcclient.download.youku.com/youkuclient/youkuclient_setup_8.0.7.11061.exe",
-                                new ProgressBarListener() {
-                                    @Override
-                                    public void getMax(int length) {
-                                        Log.d("TAG-----", "download_max:" + length);
-                                    }
-
-                                    @Override
-                                    public void getDownload(int length) {
-                                        Log.d("TAG-----", "download_callback:" + length);
-                                    }
-                                });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.d("TAG-----", "download_Exception:" + e);
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("TAG-----", "download_Exception:" + e);
-        }
     }
 
+
+    public void start(View view) {
+        DownloadManager.getInstance().init(this.getApplicationContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DownloadManager.getInstance().download("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
+                        new ProgressBarListener() {
+                            @Override
+                            public void getMax(int length) {
+                                Log.d("TAG-----", "download_max:" + length);
+                            }
+
+                            @Override
+                            public void getDownload(int length) {
+                                Log.d("TAG-----", "download_callback:" + length);
+                            }
+
+                            @Override
+                            public void error(String msg) {
+                                Log.d("TAG-----", "download_error:" + msg);
+                            }
+                        });
+
+            }
+        }).start();
+    }
+
+    public void end(View view) {
+        DownloadManager.getInstance().stopDownLoad("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
+    }
 
     public void xrecyclerview(View view) {
         //xrecyclerview

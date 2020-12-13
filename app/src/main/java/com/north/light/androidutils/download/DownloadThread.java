@@ -1,5 +1,7 @@
 package com.north.light.androidutils.download;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -12,7 +14,7 @@ import java.net.URL;
  *
  * @author liuyazhuang
  */
-public class DownloadThread extends Thread {
+public class DownloadThread implements Runnable {
     //下载的线程id
     private int threadId;
     //下载的文件路径
@@ -39,10 +41,17 @@ public class DownloadThread extends Thread {
         this.endPosition = (threadId + 1) * block - 1;
     }
 
+
     @Override
     public void run() {
-        super.run();
         try {
+            //获取上次下载的进度
+            String saveKey = threadId + startPosition + endPosition + file.getPath();
+            long lastPro = DownloadCacheManager.getInstance().getProgress(saveKey);
+            Log.d("TAG-----", saveKey + "download_上次位置:" + lastPro);
+            if (lastPro != -1) {
+                startPosition = (int) lastPro;
+            }
             //创建RandomAccessFile对象
             RandomAccessFile accessFile = new RandomAccessFile(file, "rwd");
             //跳转到开始位置
@@ -60,11 +69,20 @@ public class DownloadThread extends Thread {
             InputStream in = conn.getInputStream();
             byte[] buffer = new byte[1024];
             int len = 0;
+            //记录下载时候的进度，并且放入缓存
+            long curDuration = 0;
             while ((len = in.read(buffer)) != -1) {
                 accessFile.write(buffer, 0, len);
                 //更新下载进度
                 listener.getDownload(len);
+                if (curDuration == 0) {
+                    curDuration = startPosition;
+                }
+                curDuration = curDuration + len;
+                DownloadCacheManager.getInstance().setProgress(saveKey, curDuration);
             }
+            //如果下载完成，置空对象
+            DownloadCacheManager.getInstance().setProgress(saveKey, -1);
             accessFile.close();
             in.close();
         } catch (Exception e) {
