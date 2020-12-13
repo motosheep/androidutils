@@ -3,11 +3,16 @@ package com.north.light.androidutils;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.north.light.androidutils.download.DownloadManager;
+import com.north.light.androidutils.download.ProgressBarListener;
 import com.north.light.androidutils.recyclerview.test.XRecyActivity;
 import com.north.light.androidutils.viewpager.BannerViewPager;
 
@@ -63,6 +68,34 @@ public class MainActivity extends AppCompatActivity {
 //                holder.setText(R.id.tv_label_name,item);
 //            }
 //        });
+
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        new DownloadManager().download("https://pcclient.download.youku.com/youkuclient/youkuclient_setup_8.0.7.11061.exe",
+                                new ProgressBarListener() {
+                                    @Override
+                                    public void getMax(int length) {
+                                        Log.d("TAG-----", "download_max:" + length);
+                                    }
+
+                                    @Override
+                                    public void getDownload(int length) {
+                                        Log.d("TAG-----", "download_callback:" + length);
+                                    }
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("TAG-----", "download_Exception:" + e);
+                    }
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("TAG-----", "download_Exception:" + e);
+        }
     }
 
 
