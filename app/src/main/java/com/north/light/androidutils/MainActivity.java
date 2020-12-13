@@ -73,33 +73,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void start(View view) {
         DownloadManager.getInstance().init(this.getApplicationContext());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DownloadManager.getInstance().download("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
-                        new ProgressBarListener() {
-                            @Override
-                            public void getMax(int length) {
-                                Log.d("TAG-----", "download_max:" + length);
-                            }
+        DownloadManager.getInstance().start("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
+                new DownloadManager.DataBackInfo() {
 
-                            @Override
-                            public void getDownload(int length) {
-                                Log.d("TAG-----", "download_callback:" + length);
-                            }
 
-                            @Override
-                            public void error(String msg) {
-                                Log.d("TAG-----", "download_error:" + msg);
-                            }
-                        });
+                    @Override
+                    public void data(long total, long current, float percent, boolean isFinish) {
+                        Log.d("TAG----","total: " + total + "\tcurrent: " + current
+                                + "\tpercent: " + percent  + "\tisFinish: " + isFinish);
+                    }
 
-            }
-        }).start();
+                    @Override
+                    public void error(String message) {
+                        Log.d("TAG----","error: " + message);
+                    }
+                });
     }
 
     public void end(View view) {
-        DownloadManager.getInstance().stopDownLoad("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
+        DownloadManager.getInstance().stop("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
     }
 
     public void xrecyclerview(View view) {

@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.content.Context;
 import android.os.Environment;
@@ -31,10 +32,11 @@ public class DownloadManager {
 
     /**
      * 初始化方法
-     * */
-    public void init(Context context){
+     */
+    public void init(Context context) {
         DownloadCacheManager.getInstance().init(context);
     }
+
 
     /**
      * 下载文件的方法
@@ -43,7 +45,7 @@ public class DownloadManager {
      * @param listener：自定义的下载文件监听接口
      * @throws Exception
      */
-    public void download(String path, ProgressBarListener listener) {
+    private void download(String path, ProgressBarListener listener) {
         try {
             URL url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -75,13 +77,6 @@ public class DownloadManager {
     }
 
     /**
-     * 关闭下载
-     */
-    public Boolean stopDownLoad(String path) {
-        return ExecutorsManager.getInstance().closeCacheExecutors(path);
-    }
-
-    /**
      * 截取路径中的文件名称
      *
      * @param path:要截取文件名称的路径
@@ -89,5 +84,65 @@ public class DownloadManager {
      */
     private String getFileName(String path) {
         return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+
+    //外部调用方法---------------------------------------------------------------------------------
+
+
+    /**
+     * 开启
+     */
+    public void start(final String path, final DataBackInfo listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //总进度
+                final AtomicInteger total = new AtomicInteger();
+                final AtomicInteger current = new AtomicInteger();
+                download(path, new ProgressBarListener() {
+                    @Override
+                    public void getMax(int length) {
+                        total.set(length);
+                        if (listener != null) {
+                            listener.data(total.get(), 0, 0, false);
+                        }
+                    }
+
+                    @Override
+                    public void getDownload(int length) {
+                        if (listener != null) {
+                            Float tol = total.get() / 1f;
+                            Float cur = current.addAndGet(length) / 1f;
+                            listener.data(tol.longValue(), cur.longValue(), cur / tol, (tol.equals(cur)));
+                        }
+                    }
+
+
+                    @Override
+                    public void error(String msg) {
+                        if (listener != null) {
+                            listener.error(msg);
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * 关闭
+     */
+    public Boolean stop(String path) {
+        return ExecutorsManager.getInstance().closeCacheExecutors(path);
+    }
+
+    /**
+     * 数据回调监听
+     */
+    public interface DataBackInfo {
+        void data(long total, long current, float percent, boolean isFinish);
+
+        void error(String message);
     }
 }

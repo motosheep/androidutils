@@ -27,6 +27,7 @@ public class DownloadThread implements Runnable {
     private int block;
     //下载的开始位置
     private int startPosition;
+    private int originStartPosition;
     //下载的结束位置
     private int endPosition;
 
@@ -38,6 +39,7 @@ public class DownloadThread implements Runnable {
         this.block = block;
 
         this.startPosition = threadId * block;
+        this.originStartPosition = threadId * block;
         this.endPosition = (threadId + 1) * block - 1;
     }
 
@@ -69,12 +71,24 @@ public class DownloadThread implements Runnable {
             InputStream in = conn.getInputStream();
             byte[] buffer = new byte[1024];
             int len = 0;
+            //记录是否断点下载标识
+            boolean isBrokenAndContinue;
+            if (lastPro == -1) {
+                isBrokenAndContinue = false;
+            } else {
+                isBrokenAndContinue = true;
+            }
             //记录下载时候的进度，并且放入缓存
             long curDuration = 0;
             while ((len = in.read(buffer)) != -1) {
                 accessFile.write(buffer, 0, len);
                 //更新下载进度
-                listener.getDownload(len);
+                if (isBrokenAndContinue) {
+                    isBrokenAndContinue = false;
+                    listener.getDownload(len + (startPosition - originStartPosition));
+                } else {
+                    listener.getDownload(len);
+                }
                 if (curDuration == 0) {
                     curDuration = startPosition;
                 }
