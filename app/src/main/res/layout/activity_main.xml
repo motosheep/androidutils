@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -38,13 +36,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="start"
-            android:text="start" />
+            android:text="download start" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="end"
-            android:text="end" />
+            android:text="download end" />
+
+        <com.north.light.androidutils.textview.NumAnimTextView
+            android:id="@+id/numanim"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/color_000000"
+            android:gravity="center"
+            android:textColor="@color/color_ffffff"
+            android:textSize="16sp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="animnum"
+            android:text="anim num start" />
+
 
     </LinearLayout>
 

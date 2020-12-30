@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.north.light.androidutils.download.DownloadManager;
 import com.north.light.androidutils.download.ProgressBarListener;
 import com.north.light.androidutils.recyclerview.test.XRecyActivity;
+import com.north.light.androidutils.textview.NumAnimTextView;
 import com.north.light.androidutils.viewpager.BannerViewPager;
 
 import java.util.ArrayList;
@@ -94,8 +95,9 @@ public class MainActivity extends AppCompatActivity {
         DownloadManager.getInstance().stop("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
     }
 
-    public void xrecyclerview(View view) {
-        //xrecyclerview
-        startActivity(new Intent(this, XRecyActivity.class));
+
+    public void animnum(View view) {
+       NumAnimTextView nu =  findViewById(R.id.numanim);
+       nu.setAnimText("" + (Math.random()*1000));
     }
 }
