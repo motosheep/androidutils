@@ -1,24 +1,16 @@
 package com.north.light.androidutils;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.north.light.androidutils.colordraw.SadDrawUtils;
 import com.north.light.androidutils.download.DownloadManager;
-import com.north.light.androidutils.download.ProgressBarListener;
-import com.north.light.androidutils.recyclerview.test.XRecyActivity;
 import com.north.light.androidutils.textview.NumAnimTextView;
-import com.north.light.androidutils.viewpager.BannerViewPager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SadDrawUtils.getInstance().setSadTheme(this);
+
 //        BannerViewPager viewPager = findViewById(R.id.banner);
 //        List<String> a = new ArrayList<>();
 //        a.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021768252,432753213&fm=26&gp=0.jpg");
@@ -72,7 +66,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     public void start(View view) {
+
         DownloadManager.getInstance().init(this.getApplicationContext());
         DownloadManager.getInstance().start("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
                 new DownloadManager.DataBackInfo() {
