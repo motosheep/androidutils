@@ -62,14 +62,18 @@ androidutils
 7 宽高相等的imageview--WHImageView
 
 
-20201230
+20201230--NumAnimTextView
 
 1增加数字滚动控件
 
 
-
-20210120
+20210120--SadDrawUtils
 
 1增加哀悼日绘制工具类
+
+
+20210203--ClickableUtils
+
+1增加点击时长限制工具类
 
 

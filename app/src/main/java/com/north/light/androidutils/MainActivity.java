@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.north.light.androidutils.clickable.ClickableUtils;
 import com.north.light.androidutils.colordraw.SadDrawUtils;
 import com.north.light.androidutils.download.DownloadManager;
 import com.north.light.androidutils.textview.NumAnimTextView;
@@ -69,27 +70,32 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void start(View view) {
-
-        DownloadManager.getInstance().init(this.getApplicationContext());
-        DownloadManager.getInstance().start("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
-                new DownloadManager.DataBackInfo() {
-
-
-                    @Override
-                    public void data(long total, long current, float percent, boolean isFinish) {
-                        Log.d("TAG----","total: " + total + "\tcurrent: " + current
-                                + "\tpercent: " + percent  + "\tisFinish: " + isFinish);
-                    }
-
-                    @Override
-                    public void error(String message) {
-                        Log.d("TAG----","error: " + message);
-                    }
-                });
+        boolean canClick = ClickableUtils.getInstance().canViewClick(view);
+        if(canClick){
+            Log.d("TAG","可以点击");
+        }else{
+            Log.d("TAG","不可以点击");
+        }
+//        DownloadManager.getInstance().init(this.getApplicationContext());
+//        DownloadManager.getInstance().start("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk",
+//                new DownloadManager.DataBackInfo() {
+//
+//
+//                    @Override
+//                    public void data(long total, long current, float percent, boolean isFinish) {
+//                        Log.d("TAG----","total: " + total + "\tcurrent: " + current
+//                                + "\tpercent: " + percent  + "\tisFinish: " + isFinish);
+//                    }
+//
+//                    @Override
+//                    public void error(String message) {
+//                        Log.d("TAG----","error: " + message);
+//                    }
+//                });
     }
 
     public void end(View view) {
-        DownloadManager.getInstance().stop("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
+//        DownloadManager.getInstance().stop("http://codown.youdao.com/note/youdaonote_android_7.0.1_youdaoweb.apk");
     }
 
 
