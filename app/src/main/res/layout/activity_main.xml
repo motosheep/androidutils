@@ -8,11 +8,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.north.light.androidutils.imageview.RotateImageView
+        <com.north.light.androidutils.imageview.RedHeartImageView
             android:layout_width="50dp"
+            android:scaleType="fitXY"
+            android:background="@color/color_a8a8a8"
             android:layout_height="50dp"
-            android:id="@+id/activity_main_r_img"
-            android:src="@mipmap/ic_launcher_round" />
+            android:id="@+id/activity_main_r_img" />
 
 
     </LinearLayout>

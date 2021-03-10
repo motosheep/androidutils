@@ -5,16 +5,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.north.light.androidutils.colordraw.SadDrawUtils;
-import com.north.light.androidutils.download.DownloadManager;
-import com.north.light.androidutils.imageview.RotateImageView;
-import com.north.light.androidutils.textview.NumAnimTextView;
+import com.north.light.androidutils.imageview.RedHeartImageView;
 
 public class MainActivity extends AppCompatActivity {
+    int type = 1;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -26,7 +22,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        final RedHeartImageView rImg = findViewById(R.id.activity_main_r_img);
+        rImg.setRes(R.mipmap.ic_heart_unsel,R.mipmap.ic_heart_sel);
+        rImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rImg.changeRes(type%2);
+                type = type + 1;
+            }
+        });
     }
 
 }
