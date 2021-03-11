@@ -6,14 +6,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <com.north.light.androidutils.imageview.RedHeartImageView
-            android:layout_width="50dp"
-            android:scaleType="fitXY"
-            android:background="@color/color_a8a8a8"
-            android:layout_height="50dp"
-            android:id="@+id/activity_main_r_img" />
+        <com.north.light.androidutils.imageview.FlowLikeView
+            android:id="@+id/activity_main_like"
+            android:layout_width="100dp"
+            android:layout_height="500dp">
+
+            <TextView
+                android:id="@+id/like"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="bottom"
+                android:text="like"
+                android:textSize="16sp" />
+        </com.north.light.androidutils.imageview.FlowLikeView>
 
 
     </LinearLayout>

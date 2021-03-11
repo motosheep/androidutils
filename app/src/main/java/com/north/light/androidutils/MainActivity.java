@@ -2,12 +2,12 @@ package com.north.light.androidutils;
 
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import com.north.light.androidutils.imageview.RedHeartImageView;
+import com.north.light.androidutils.imageview.FlowLikeView;
 
 public class MainActivity extends AppCompatActivity {
     int type = 1;
@@ -22,13 +22,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        final RedHeartImageView rImg = findViewById(R.id.activity_main_r_img);
-        rImg.setRes(R.mipmap.ic_heart_unsel,R.mipmap.ic_heart_sel);
-        rImg.setOnClickListener(new View.OnClickListener() {
+        final TextView like = findViewById(R.id.like);
+        like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rImg.changeRes(type%2);
-                type = type + 1;
+                ((FlowLikeView) findViewById(R.id.activity_main_like)).addLikeView();
             }
         });
     }
