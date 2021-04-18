@@ -1,5 +1,3 @@
-androidutils
-
 20200514
 
 1增加xrecyclerview--XRecyclerView
@@ -16,11 +14,9 @@ androidutils
 
 2增加验证码输入控件--MulInputView
 
-
 20200609
 
 1增加竖直文字滚动控件--VerticalScrollTxView
-
 
 20201202
 
@@ -28,52 +24,48 @@ androidutils
 
 2可设置字体大小的tab layout--CusTabLayout
 
-
-
 20201207
 
 1 mmkv工具类--MMKVManager
 
-2 时间接收工具类--TimeBroadcastUtils
+2时间接收工具类--TimeBroadcastUtils
 
-3 软件盘适配工具类--SoftKeyboardFixerForFullscreen
+3软件盘适配工具类--SoftKeyboardFixerForFullscreen
 
 4 gson工具类--GsonUtils
 
-5 软件前后台判断工具类--ActivityCounter
+5软件前后台判断工具类--ActivityCounter
 
-6 自定义recycleview adapter--BaseScaleAnimAdapter
-
+6自定义recycleview adapter--BaseScaleAnimAdapter
 
 20201209
 
-1 基础service，兼容安卓版本基类--BaseServiceCompat
+1基础service，兼容安卓版本基类--BaseServiceCompat
 
-2 全局异常捕获--MyCatchException
+2全局异常捕获--MyCatchException
 
-3 属性复制类--BeanUtils
+3属性复制类--BeanUtils
 
-4 控件截屏类--ViewShotUtils
+4控件截屏类--ViewShotUtils
 
-5 进程管理类--ProcessUtil
+5进程管理类--ProcessUtil
 
-6 验证码倒计时--CodeTimer
+6验证码倒计时--CodeTimer
 
-7 宽高相等的imageview--WHImageView
+7宽高相等的imageview--WHImageView
 
+20201230
 
-20201230--NumAnimTextView
+1增加数字滚动控件--NumAnimTextView
+20210120
 
-1增加数字滚动控件
+1增加哀悼日绘制工具类--SadDrawUtils
+20210203
 
+1增加点击时长限制工具类--ClickableUtils
 
-20210120--SadDrawUtils
+20210310
 
-1增加哀悼日绘制工具类
+1增加旋转的imageview--RotateImageView
 
-
-20210203--ClickableUtils
-
-1增加点击时长限制工具类
-
-
+2增加点赞的imageview--RedHeartImageView
