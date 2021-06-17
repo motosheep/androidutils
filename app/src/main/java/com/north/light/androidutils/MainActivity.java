@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.imageview.FlowLikeView;
+import com.north.light.androidutils.imageview.RotateImageView;
 
 public class MainActivity extends AppCompatActivity {
     int type = 1;
@@ -22,13 +23,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        final TextView like = findViewById(R.id.like);
-        like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((FlowLikeView) findViewById(R.id.activity_main_like)).addLikeView();
-            }
-        });
+        final RotateImageView like = findViewById(R.id.activity_main_rotate);
+       like.startAnim();
     }
 
 }

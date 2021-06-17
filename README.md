@@ -26,7 +26,7 @@
 
 20201207
 
-1 mmkv工具类--MMKVManager
+1mmkv工具类--MMKVManager
 
 2时间接收工具类--TimeBroadcastUtils
 
@@ -56,16 +56,20 @@
 
 20201230
 
-1增加数字滚动控件--NumAnimTextView
+1数字滚动控件--NumAnimTextView
 20210120
 
-1增加哀悼日绘制工具类--SadDrawUtils
+1哀悼日绘制工具类--SadDrawUtils
 20210203
 
-1增加点击时长限制工具类--ClickableUtils
+1点击时长限制工具类--ClickableUtils
 
 20210310
 
 1增加旋转的imageview--RotateImageView
 
 2增加点赞的imageview--RedHeartImageView
+
+20210617
+
+1增加List分割--ListSpilt
