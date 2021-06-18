@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+//X AOP
+apply plugin: 'com.xuexiang.xaop' //引用xaop插件
+apply plugin: 'android-aspectjx' //引用aspectjx插件
+
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
@@ -21,6 +25,11 @@ android {
 
 }
 
+//X AOP
+aspectjx {
+    include 'com.north.light.androidutils'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.0'
@@ -39,6 +48,9 @@ dependencies {
     //mmkv
     api 'com.tencent:mmkv:1.0.10'
 
+    //X AOP
+    //如果是androidx项目，使用1.1.0版本及以上
+    implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.1.0'
 }
 
 
