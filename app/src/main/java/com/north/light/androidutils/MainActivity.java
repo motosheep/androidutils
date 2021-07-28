@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.aspectj.AspectJManager;
+import com.north.light.androidutils.mulchannel.ChannelUtils;
 import com.north.light.libumeng.UMManager;
 import com.umeng.commonsdk.UMConfigure;
 import com.xuexiang.xaop.XAOP;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         AspectJManager.getInstance();
         UMManager.getInstance().init(this, "61011d8026e9627944aac7c7",
                 "UMENG_CHANNEL", UMConfigure.DEVICE_TYPE_PHONE, null, 1);
+        Log.d("MianActivity", "channel:" + ChannelUtils.getChannel(this));
     }
 
     public void initView() {
