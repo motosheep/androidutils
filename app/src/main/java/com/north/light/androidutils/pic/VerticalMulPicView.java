@@ -25,7 +25,7 @@ public class VerticalMulPicView extends CardView {
     private static final String TAG = VerticalMulPicView.class.getName();
     //装载的图片集合
     private List<ImageView> mImageList = new ArrayList<>();
-    //根布局lienarlayout
+    //根布局linear layout
     private LinearLayout mRootLinearLayout;
 
     public VerticalMulPicView(@NonNull Context context) {

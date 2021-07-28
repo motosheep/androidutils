@@ -1,5 +1,23 @@
 apply plugin: 'com.android.application'
+//X AOP
+apply plugin: 'com.xuexiang.xaop' //引用xaop插件
+apply plugin: 'android-aspectjx' //引用aspectjx插件
+
 android {
+    signingConfigs {
+        debug {
+            storeFile file('../androidutils.jks')
+            keyAlias = 'androidutils'
+            storePassword '123456'
+            keyPassword '123456'
+        }
+        release {
+            storeFile file('../androidutils.jks')
+            keyAlias = 'androidutils'
+            storePassword '123456'
+            keyPassword '123456'
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
@@ -10,6 +28,8 @@ android {
         versionName "1.0"
         consumerProguardFiles 'consumer-rules.pro'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //多渠道
+        flavorDimensions "versionCode"
     }
 
     buildTypes {
@@ -18,7 +38,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    //1 渠道名字
+    productFlavors {
+        wandoujia {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+        }
+        baidu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+        }
+        c360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "c360"]
+        }
+        uc {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "uc"]
+        }
+    }
+    // 2 自动替换 AndroidManifest.xml 里面的metadata
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+    // 3 设置输出APK名称
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName ="app_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
 
+//X AOP
+aspectjx {
+    include 'com.north.light.androidutils'
 }
 
 dependencies {
@@ -39,6 +92,12 @@ dependencies {
     //mmkv
     api 'com.tencent:mmkv:1.0.10'
 
+    //X AOP
+    //如果是androidx项目，使用1.1.0版本及以上
+    implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.1.0'
+
+    //lib umemg
+    api project(":libumeng")
 }
 
 

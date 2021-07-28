@@ -19,15 +19,27 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.umeng.** {*;}
 
-#X AOP
--keep @com.xuexiang.xaop.annotation.* class * {*;}
--keep @org.aspectj.lang.annotation.* class * {*;}
--keep class * {
-    @com.xuexiang.xaop.annotation.* <fields>;
-    @org.aspectj.lang.annotation.* <fields>;
-}
 -keepclassmembers class * {
-    @com.xuexiang.xaop.annotation.* <methods>;
-    @org.aspectj.lang.annotation.* <methods>;
+   public <init> (org.json.JSONObject);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep class com.zui.**{*;}
+-keep class com.miui.**{*;}
+-keep class com.heytap.**{*;}
+-keep class a.**{*;}
+-keep class com.vivo.**{*;}
+
+-keep public class com.north.light.androidutils.R$*{
+public static final int *;
+}
+
+-keep public class com.north.light.libumeng.R$*{
+public static final int *;
 }

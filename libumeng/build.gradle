@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        consumerProguardFiles 'consumer-rules.pro'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    // 友盟统计SDK
+    api  'com.umeng.umsdk:common:9.4.0'// 必选
+    api  'com.umeng.umsdk:asms:1.2.3'// 必选
+    api 'com.umeng.umsdk:apm:1.4.0' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
+    api  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
+}
