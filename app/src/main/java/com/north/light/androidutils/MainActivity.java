@@ -8,7 +8,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.aspectj.AspectJManager;
-import com.north.light.androidutils.imageview.RotateImageView;
+import com.north.light.libumeng.UMManager;
+import com.umeng.commonsdk.UMConfigure;
 import com.xuexiang.xaop.XAOP;
 import com.xuexiang.xaop.annotation.Intercept;
 
@@ -25,13 +26,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         AspectJManager.getInstance();
+        UMManager.getInstance().init(this, "61011d8026e9627944aac7c7",
+                "UMENG_CHANNEL", UMConfigure.DEVICE_TYPE_PHONE, null, 1);
     }
 
     public void initView() {
-        final RotateImageView like = findViewById(R.id.activity_main_rotate);
-//       like.startAnim();
-
-
         //X AOP
         XAOP.init(this.getApplication()); //初始化插件
         XAOP.debug(true); //日志打印切片开启

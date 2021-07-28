@@ -30,8 +30,8 @@ android {
 dependencies {
 
     // 友盟统计SDK
-    implementation  'com.umeng.umsdk:common:9.4.0'// 必选
-    implementation  'com.umeng.umsdk:asms:1.2.3'// 必选
-    implementation 'com.umeng.umsdk:apm:1.4.0' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
-    implementation  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
+    api  'com.umeng.umsdk:common:9.4.0'// 必选
+    api  'com.umeng.umsdk:asms:1.2.3'// 必选
+    api 'com.umeng.umsdk:apm:1.4.0' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
+    api  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
 }
