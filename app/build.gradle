@@ -51,6 +51,9 @@ dependencies {
     //X AOP
     //如果是androidx项目，使用1.1.0版本及以上
     implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.1.0'
+
+    //lib umemg
+    api project(":libumeng")
 }
 
 
