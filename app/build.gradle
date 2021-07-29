@@ -98,6 +98,9 @@ dependencies {
 
     //lib umemg
     api project(":libumeng")
+
+    //wechat
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
 
 

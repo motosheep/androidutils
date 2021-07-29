@@ -77,3 +77,11 @@
 20210618
 
 1增加XAOP库
+
+20210729
+
+1友盟统计libumeng
+
+2微信安装检测工具类WeChatInstallUtils
+
+3原生多渠道打包配置
