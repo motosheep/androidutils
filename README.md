@@ -89,3 +89,5 @@
 20210730
 
 1coordinatorlayout 基础使用
+
+2商标工具类BrandUtils
