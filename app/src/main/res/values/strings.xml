@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidUtils</string>
+    <string name="behavior_coordinator_one">com.north.light.androidutils.coordinatorLayout.CoorBehavior</string>
 </resources>
