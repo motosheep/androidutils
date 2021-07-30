@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.north.light.androidutils.activitycounter.ActivityCounter;
 import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
