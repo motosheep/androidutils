@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:onClick="test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center|top"
         android:orientation="vertical">
 
-        <com.north.light.androidutils.imageview.RotateImageView
-            android:layout_width="50dp"
-            android:id="@+id/activity_main_rotate"
-            android:layout_height="50dp"
-            android:src="@mipmap/ic_launcher" />
+        <Button
+            android:id="@+id/activity_main_coor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CoordinatorLayout--1--appbarlayout" />
+
+        <Button
+            android:id="@+id/activity_main_coor2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CoordinatorLayout--2--behavior--first" />
+
+        <Button
+            android:id="@+id/activity_main_coor3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CoordinatorLayout--2--collapsing" />
 
     </LinearLayout>
 
