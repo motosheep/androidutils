@@ -1,3 +1,4 @@
 rootProject.name='AndroidUtils'
 include ':app'
 include ':libumeng'
+include ':libshare'

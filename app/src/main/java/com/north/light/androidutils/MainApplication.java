@@ -3,6 +3,7 @@ package com.north.light.androidutils;
 import android.app.Application;
 
 import com.north.light.androidutils.activitycounter.ActivityCounter;
+import com.north.light.libshare.ShareMain;
 
 /**
  * @Author: lzt
