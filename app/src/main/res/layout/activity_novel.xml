@@ -11,4 +11,9 @@
 
 
     </com.north.light.androidutils.novel.reader.NovelReader>
+
+<!--    <com.north.light.androidutils.novel.reader.ReaderTextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:id="@+id/ddd"-->
+<!--        android:layout_height="match_parent"/>-->
 </RelativeLayout>

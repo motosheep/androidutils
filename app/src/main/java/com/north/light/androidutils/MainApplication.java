@@ -1,9 +1,9 @@
 package com.north.light.androidutils;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.north.light.androidutils.activitycounter.ActivityCounter;
-import com.north.light.libshare.ShareMain;
 
 /**
  * @Author: lzt
@@ -12,9 +12,16 @@ import com.north.light.libshare.ShareMain;
  * @Description:
  */
 public class MainApplication extends Application {
+    private static Context mContext;
+
+    public static Context getContext() {
+        return mContext;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         ActivityCounter.getInstance().init(this);
     }
 }

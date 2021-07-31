@@ -7,6 +7,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.north.light.androidutils.R;
+
 import java.util.List;
 
 /**
@@ -29,6 +31,11 @@ public class NovelReader extends RelativeLayout {
     private ReaderTextView mCurTextView;
     private ReaderTextView mNextTextView;
 
+    /**
+     * 文字测试控件
+     */
+    private ReaderTextView mTextTestView;
+
 
     public NovelReader(Context context) {
         this(context, null);
@@ -40,9 +47,14 @@ public class NovelReader extends RelativeLayout {
 
     public NovelReader(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mTextTestView = new ReaderTextView(context);
         mPreTextRV = new RelativeLayout(context);
         mCurTextRV = new RelativeLayout(context);
         mNextTextRV = new RelativeLayout(context);
+        addView(mTextTestView);
+        addView(mNextTextRV);
+        addView(mCurTextRV);
+        addView(mPreTextRV);
         mNovelView = new NovelTouchReader(context) {
             @Override
             public RelativeLayout getCurTextView() {
@@ -59,10 +71,8 @@ public class NovelReader extends RelativeLayout {
                 return mPreTextRV;
             }
         };
-        addView(mNextTextRV);
-        addView(mCurTextRV);
-        addView(mPreTextRV);
         addView(mNovelView);
+        mTextTestView.setVisibility(View.INVISIBLE);
         mPreTextRV.setVisibility(View.INVISIBLE);
         mPreTextRV.setBackgroundColor(Color.WHITE);
         mCurTextRV.setBackgroundColor(Color.WHITE);
@@ -72,6 +82,10 @@ public class NovelReader extends RelativeLayout {
         parentParams.width = LayoutParams.MATCH_PARENT;
         parentParams.height = LayoutParams.MATCH_PARENT;
         //match params
+        mCurTextRV.setBackgroundColor(Color.YELLOW);
+        mPreTextRV.setBackgroundColor(Color.YELLOW);
+        mNextTextRV.setBackgroundColor(Color.YELLOW);
+        mTextTestView.setLayoutParams(parentParams);
         mPreTextRV.setLayoutParams(parentParams);
         mCurTextRV.setLayoutParams(parentParams);
         mNextTextRV.setLayoutParams(parentParams);
@@ -83,28 +97,19 @@ public class NovelReader extends RelativeLayout {
         mPreTextRV.addView(mPreTextView);
         mCurTextRV.addView(mCurTextView);
         mNextTextRV.addView(mNextTextView);
-        mPreTextView.setGravity(Gravity.RIGHT);
-        mCurTextView.setGravity(Gravity.RIGHT);
-        mNextTextView.setGravity(Gravity.RIGHT);
+        mTextTestView.setGravity(Gravity.LEFT);
+        mPreTextView.setGravity(Gravity.LEFT);
+        mCurTextView.setGravity(Gravity.LEFT);
+        mNextTextView.setGravity(Gravity.LEFT);
         mPreTextView.setLayoutParams(parentParams);
         mCurTextView.setLayoutParams(parentParams);
         mNextTextView.setLayoutParams(parentParams);
-
-
-        try {
-            updateData(ReadDataManager.getInstance().getCur());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         //事件控制
         mNovelView.setStataChangeListener(new NovelTouchReader.StataChangeListener() {
             @Override
             public void pre() {
                 try {
                     updateData(ReadDataManager.getInstance().getPre());
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -119,6 +124,52 @@ public class NovelReader extends RelativeLayout {
                 }
             }
         });
+
+        mTextTestView.setOnTextChangeListener(new ReaderTextView.TextChangeListener() {
+            @Override
+            public void textSize(int count) {
+                try {
+                    if (count == 0) {
+                        return;
+                    }
+                    //字体大小--一页能显示多少个字符--初始化数据
+                    ReadDataManager.getInstance().updateList(count);
+                    updateData(ReadDataManager.getInstance().getCur());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //设置字体颜色和大小
+                setTextSize(30f, Color.BLACK);
+            }
+        }, 400);
+    }
+
+    /**
+     * 设置字体大小
+     */
+    public void setTextSize(float size, int black) {
+        mTextTestView.setLineSpacing(20, 1);
+        mPreTextView.setLineSpacing(20, 1);
+        mCurTextView.setLineSpacing(20, 1);
+        mNextTextView.setLineSpacing(20, 1);
+
+        mPreTextView.setTextSize(size);
+        mCurTextView.setTextSize(size);
+        mNextTextView.setTextSize(size);
+        mTextTestView.setTextSize(size);
+
+        mPreTextView.setTextColor(black);
+        mCurTextView.setTextColor(black);
+        mNextTextView.setTextColor(black);
+        mTextTestView.setTextColor(black);
+
+        //在测试布局，测试每页最多显示多少个字符
+        mTextTestView.setText(getContext().getResources().getString(R.string.messure_txt_demo));
     }
 
     /**

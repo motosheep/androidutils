@@ -3,7 +3,6 @@ package com.north.light.androidutils.novel.reader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -12,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.north.light.androidutils.R;
 import com.north.light.androidutils.novel.utils.LogUtils;
 import com.north.light.androidutils.novel.utils.NovelViewShotUtils;
 
@@ -55,9 +55,9 @@ public abstract class NovelTouchReader extends RelativeLayout {
      */
     private static Paint mBitmapPaint;
     /**
-     * 滑动方向标识：1左滑 2右滑
+     * 滑动方向标识：1左滑 2右滑 0默认
      */
-    private int mSlideTAG = 1;
+    private int mSlideTAG = 0;
     /**
      * 绘制时，当前bitmap
      */
@@ -186,8 +186,11 @@ public abstract class NovelTouchReader extends RelativeLayout {
             }
             resetValue();
         } else if (mSlideTAG == 1) {
+            if (!isDrawAnim) {
+                DATA_MOVE_X = DATA_MOVE_X + DATA_HORIZONTAL_RIGHT_INTERVAL_X;
+            }
             isDrawAnim = true;
-            if (DATA_UP_X + DATA_HORIZONTAL_RIGHT_INTERVAL_X < 0) {
+            if (DATA_MOVE_X < 0) {
                 if (mListener != null) {
                     mListener.next();
                 }
@@ -195,14 +198,14 @@ public abstract class NovelTouchReader extends RelativeLayout {
                 resetValue();
                 return;
             }
-            DATA_UP_X = DATA_UP_X - 30;
+            DATA_MOVE_X = DATA_MOVE_X - 30;
             canvas.save();
             createHorizontalBitmap(false);
             canvas.drawBitmap(mBottomBitmap, 0, 0, mBitmapPaint);
             //根据差值，绘制x轴偏移的上传bitmap
-            mSrcRect = new Rect((int) (getWidth() - DATA_UP_X + DATA_HORIZONTAL_RIGHT_INTERVAL_X),
+            mSrcRect = new Rect((int) (getWidth() - DATA_MOVE_X),
                     0, mCurBitmap.getWidth(), mCurBitmap.getHeight());
-            mDestRect = new Rect(0, 0, (int) (DATA_UP_X + DATA_HORIZONTAL_RIGHT_INTERVAL_X), mCurBitmap.getHeight());
+            mDestRect = new Rect(0, 0, (int) DATA_MOVE_X, mCurBitmap.getHeight());
             canvas.drawBitmap(mCurBitmap, mSrcRect, mDestRect, mBitmapPaint);
             canvas.restore();
             postInvalidateDelayed(2);
@@ -261,6 +264,7 @@ public abstract class NovelTouchReader extends RelativeLayout {
     public void createHorizontalBitmap(boolean refreshTag) {
         if (refreshTag) {
             releaseBitmap();
+            return;
         }
         if (mCurBitmap == null) {
             mCurBitmap = NovelViewShotUtils.viewSnapshot(getCurTextView());
@@ -318,6 +322,14 @@ public abstract class NovelTouchReader extends RelativeLayout {
                         DATA_MOVE_Y = event.getY();
                         if (Math.abs(DATA_DOWN_X - DATA_MOVE_X) > 10 || Math.abs(DATA_DOWN_Y - DATA_MOVE_Y) > 10) {
                             Log.d("touch", "move X:" + DATA_MOVE_X + "\tmove Y:" + DATA_MOVE_Y);
+                            if (DATA_MOVE_X > DATA_DOWN_X && !ReadDataManager.getInstance().hasPre()) {
+                                //右滑
+                                return false;
+                            }
+                            if (DATA_MOVE_X < DATA_DOWN_X && !ReadDataManager.getInstance().hasNext()) {
+                                //左滑
+                                return false;
+                            }
                             setDrawing(true);
                             invalidate();
                         } else {
