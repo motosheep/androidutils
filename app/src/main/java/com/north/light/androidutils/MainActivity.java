@@ -13,6 +13,7 @@ import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
+import com.north.light.androidutils.novel.NovelActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //进入CoordinatorLayout act
                 Intent intent = new Intent(MainActivity.this, CoordinatorCollapsingActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_novel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //进入novel act
+                Intent intent = new Intent(MainActivity.this, NovelActivity.class);
                 startActivity(intent);
             }
         });

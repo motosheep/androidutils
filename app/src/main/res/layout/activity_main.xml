@@ -28,6 +28,12 @@
             android:layout_height="wrap_content"
             android:text="CoordinatorLayout--2--collapsing" />
 
+        <Button
+            android:id="@+id/activity_main_novel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="novel--relative" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
