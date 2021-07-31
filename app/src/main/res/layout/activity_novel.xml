@@ -3,10 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.north.light.androidutils.novel.ReaderTextView
-        android:id="@+id/activity_novel_canvas"
+    <com.north.light.androidutils.novel.reader.NovelReader
+        android:id="@+id/activity_novel_reader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:lineSpacingExtra="10dp" />
+        android:background="@color/color_ffffff" >
 
+
+    </com.north.light.androidutils.novel.reader.NovelReader>
 </RelativeLayout>

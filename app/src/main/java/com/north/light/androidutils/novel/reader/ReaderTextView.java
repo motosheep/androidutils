@@ -1,4 +1,4 @@
-package com.north.light.androidutils.novel;
+package com.north.light.androidutils.novel.reader;
 
 import android.content.Context;
 import android.graphics.Paint;
