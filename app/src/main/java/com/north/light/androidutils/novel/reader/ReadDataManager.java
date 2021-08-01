@@ -2,6 +2,9 @@ package com.north.light.androidutils.novel.reader;
 
 import android.text.TextUtils;
 
+import com.north.light.androidutils.MainApplication;
+import com.north.light.androidutils.R;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +41,16 @@ public class ReadDataManager implements Serializable {
      */
     public List<ReadData> updateList(int unitSize) throws Exception {
         if (TextUtils.isEmpty(original.toString())) {
-            for (int i = 0; i < 10; i++) {
-//                original.append(MainApplication.getContext().getResources().getString(R.string.messure_txt));
-                original.append("i just want to" + i);
-            }
+            original.append(MainApplication.getContext().getResources().getString(R.string.novel));
+//
+//            for (int i = 0; i < 1000; i++) {
+////                original.append(MainApplication.getContext().getResources().getString(R.string.messure_txt));
+//                if (i % 2== 0) {
+//                    original.append("\n");
+//                    original.append("\t");
+//                }
+//                original.append("i just want to fucking you" + i + "个");
+//            }
         }
         mCurReadList.clear();
         int rest = original.toString().length() % unitSize;

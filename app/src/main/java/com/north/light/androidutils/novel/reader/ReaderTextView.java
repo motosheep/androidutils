@@ -129,7 +129,6 @@ public class ReaderTextView extends androidx.appcompat.widget.AppCompatTextView 
         removeTextChangeListener();
         super.onDetachedFromWindow();
     }
-
     /**
      * 字数监听
      */
