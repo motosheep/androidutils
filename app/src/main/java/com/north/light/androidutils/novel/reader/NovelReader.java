@@ -179,6 +179,5 @@ public class NovelReader extends RelativeLayout {
         mPreTextView.setText(data.get(0).getData());
         mCurTextView.setText(data.get(1).getData());
         mNextTextView.setText(data.get(2).getData());
-        mNovelView.createHorizontalBitmap(true);
     }
 }

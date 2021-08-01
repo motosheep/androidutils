@@ -2,10 +2,6 @@ package com.north.light.androidutils.novel.reader;
 
 import android.text.TextUtils;
 
-import com.north.light.androidutils.MainApplication;
-import com.north.light.androidutils.R;
-import com.north.light.androidutils.novel.utils.LogUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,22 +38,26 @@ public class ReadDataManager implements Serializable {
      */
     public List<ReadData> updateList(int unitSize) throws Exception {
         if (TextUtils.isEmpty(original.toString())) {
-            for(int i=0;i<10000;i++){
-                original.append("第").append(i);
+            for (int i = 0; i < 10; i++) {
+//                original.append(MainApplication.getContext().getResources().getString(R.string.messure_txt));
+                original.append("i just want to" + i);
             }
         }
         mCurReadList.clear();
         int rest = original.toString().length() % unitSize;
         int size = (original.toString().length() / unitSize) + ((rest == 0) ? 0 : 1);
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             if (i != size - 1) {
-                int length = original.toString().length();
-                LogUtils.d("RM", "长度" + length + original.toString());
                 String detail = original.toString().substring(i * unitSize, (i + 1) * unitSize);
                 mCurReadList.add(i, new ReadData(detail));
             } else {
-                String detail = original.toString().substring((i + 1) * unitSize);
-                mCurReadList.add(i, new ReadData(detail));
+                if (size == 1) {
+                    String detail = original.toString();
+                    mCurReadList.add(i, new ReadData(detail));
+                } else {
+                    String detail = original.toString().substring(i * unitSize);
+                    mCurReadList.add(i, new ReadData(detail));
+                }
             }
         }
         return mCurReadList;
@@ -73,9 +73,7 @@ public class ReadDataManager implements Serializable {
     }
 
     public ReadDataManager() {
-        for (int i = 0; i < 100; i++) {
-            mCurReadList.add(new ReadData(i + ""));
-        }
+
     }
 
     /**

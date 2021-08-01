@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.north.light.androidutils.R;
 import com.north.light.androidutils.novel.utils.LogUtils;
 import com.north.light.androidutils.novel.utils.NovelViewShotUtils;
 
@@ -188,12 +187,13 @@ public abstract class NovelTouchReader extends RelativeLayout {
         } else if (mSlideTAG == 1) {
             if (!isDrawAnim) {
                 DATA_MOVE_X = DATA_MOVE_X + DATA_HORIZONTAL_RIGHT_INTERVAL_X;
-            }
-            isDrawAnim = true;
-            if (DATA_MOVE_X < 0) {
                 if (mListener != null) {
                     mListener.next();
                 }
+            }
+            isDrawAnim = true;
+            if (DATA_MOVE_X < 0) {
+                createHorizontalBitmap(true);
                 isDrawAnim = false;
                 resetValue();
                 return;
