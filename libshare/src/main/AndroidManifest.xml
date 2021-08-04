@@ -28,7 +28,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--todo 输入 tencent QQ app id-->
+                <!--todo 输入 tencent QQ app id tencent222222-->
                 <data android:scheme="789456" />
             </intent-filter>
         </activity>

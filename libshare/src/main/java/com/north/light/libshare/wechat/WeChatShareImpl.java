@@ -24,17 +24,17 @@ import java.io.File;
 /**
  * 微信分享工具类
  */
-public class WeChatShare implements IWeChatShare {
+public class WeChatShareImpl implements IWeChatShare {
     // IWXAPI 是第三方app和微信通信的openApi接口
     private IWXAPI api;
 
     private Context mContext;
 
     private static final class SingleHolder {
-        static final WeChatShare mInstance = new WeChatShare();
+        static final WeChatShareImpl mInstance = new WeChatShareImpl();
     }
 
-    public static WeChatShare getInstance() {
+    public static WeChatShareImpl getInstance() {
         return SingleHolder.mInstance;
     }
 
