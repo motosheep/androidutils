@@ -93,3 +93,9 @@
 2商标工具类BrandUtils
 
 3增加分享库--libshare
+
+20210805
+
+1音频焦点管理类AudioFocusManager
+
+2logUtil日志打印类

@@ -46,7 +46,6 @@ public class ActivityCounter implements Serializable {
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             mActivityCounter.incrementAndGet();
             ActivityStack.getInstance().put(activity.getClass().getSimpleName(), activity);
-            Log.d("stack", "当前栈顶activity:" + ActivityStack.getInstance().getTopActivity());
         }
 
         @Override

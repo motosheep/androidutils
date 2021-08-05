@@ -76,7 +76,7 @@ public class ActivityStack {
     }
 
     /**
-     * 获取当前栈顶activity的simple name
+     * 获取activity的simple name
      */
     public synchronized String getTopActivity() {
         if (mStackInfo.size() == 0) return "";

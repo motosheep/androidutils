@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.north.light.androidutils.activitycounter.ActivityCounter;
+import com.north.light.androidutils.audio.focus.AudioFocusManager;
 
 /**
  * @Author: lzt
@@ -22,6 +23,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        AudioFocusManager.getInstance().init(this);
         ActivityCounter.getInstance().init(this);
     }
 }

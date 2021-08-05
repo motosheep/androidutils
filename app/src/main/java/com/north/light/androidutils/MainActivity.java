@@ -2,13 +2,15 @@ package com.north.light.androidutils;
 
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.north.light.androidutils.activitycounter.ActivityCounter;
+import com.north.light.androidutils.audio.focus.AudioFocusManager;
+import com.north.light.androidutils.audio.ui.AudioActivity;
 import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
@@ -55,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //进入novel act
                 Intent intent = new Intent(MainActivity.this, NovelActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_audio).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //进入novel act
+                Intent intent = new Intent(MainActivity.this, AudioActivity.class);
                 startActivity(intent);
             }
         });
