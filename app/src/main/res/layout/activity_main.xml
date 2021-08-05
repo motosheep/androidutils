@@ -40,6 +40,12 @@
             android:layout_height="wrap_content"
             android:text="audio-focus" />
 
+        <Button
+            android:id="@+id/activity_main_recy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xrecyclerview" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

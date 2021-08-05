@@ -1,14 +1,18 @@
 package com.north.light.androidutils.recyclerview.test;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 
 import com.north.light.androidutils.R;
 import com.north.light.androidutils.recyclerview.x.XRecyAdapter;
 import com.north.light.androidutils.recyclerview.x.XRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class XRecyActivity extends AppCompatActivity {
@@ -22,18 +26,23 @@ public class XRecyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(XRecyActivity.this,
                 RecyclerView.VERTICAL, false));
         TestAdapter adapter = new TestAdapter();
+        List<String> data = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            data.add(i + "");
+        }
+        adapter.add(data);
         XRecyAdapter xRecyclerAdapter = new XRecyAdapter(adapter);
         recyclerView.setAdapter(xRecyclerAdapter);
         xRecyclerAdapter.notifyDataSetChanged();
         recyclerView.setOnPullListener(new XRecyclerView.PullListener() {
             @Override
             public void refresh() {
-                Log.d(TAG,"refresh");
+                Log.d(TAG, "refresh");
             }
 
             @Override
             public void loadMore() {
-                Log.d(TAG,"loadMore");
+                Log.d(TAG, "loadMore");
             }
         });
     }
