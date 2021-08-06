@@ -105,6 +105,10 @@ dependencies {
     //lib xrecyclerview
     api project(":libxrecyclerview")
 
+    //smart refresh
+    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.3'
+    implementation  'com.scwang.smart:refresh-header-classics:2.0.3'
+
     //wechat
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }

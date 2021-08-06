@@ -50,7 +50,12 @@
             android:id="@+id/activity_main_recy2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="diy_xrecyclerview" />
+            android:text="diy_x_recyclerview" />
+        <Button
+            android:id="@+id/activity_main_recy3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="diy_smart_recyclerview" />
 
     </LinearLayout>
 

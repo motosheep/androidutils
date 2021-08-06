@@ -16,6 +16,7 @@ import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorF
 import com.north.light.androidutils.novel.NovelActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
+import com.north.light.androidutils.recyclerview.sdk.SDkSmartActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,10 +76,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-     findViewById(R.id.activity_main_recy2).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.activity_main_recy2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SDKXrecyclerviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_recy3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SDkSmartActivity.class);
                 startActivity(intent);
             }
         });
