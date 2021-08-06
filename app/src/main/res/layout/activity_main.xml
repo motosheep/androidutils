@@ -44,7 +44,13 @@
             android:id="@+id/activity_main_recy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xrecyclerview" />
+            android:text="cus_xrecyclerview" />
+
+        <Button
+            android:id="@+id/activity_main_recy2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="diy_xrecyclerview" />
 
     </LinearLayout>
 

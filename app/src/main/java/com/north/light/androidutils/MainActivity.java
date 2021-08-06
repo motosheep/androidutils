@@ -13,13 +13,9 @@ import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
-import com.north.light.androidutils.gson.GsonUtils;
-import com.north.light.androidutils.log.LogUtil;
 import com.north.light.androidutils.novel.NovelActivity;
-import com.north.light.androidutils.recyclerview.test.XRecyActivity;
-import com.north.light.libserailport.SerialController;
-
-import java.util.List;
+import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
+import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,8 +71,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.activity_main_recy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //进入novel act
                 Intent intent = new Intent(MainActivity.this, XRecyActivity.class);
+                startActivity(intent);
+            }
+        });
+     findViewById(R.id.activity_main_recy2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SDKXrecyclerviewActivity.class);
                 startActivity(intent);
             }
         });

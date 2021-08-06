@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".audio.ui.AudioActivity"></activity>
+        <activity android:name=".recyclerview.sdk.SDKXrecyclerviewActivity"></activity>
+        <activity android:name=".audio.ui.AudioActivity" />
         <activity
             android:name=".novel.NovelActivity"
             android:exported="true" />
@@ -32,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".recyclerview.test.XRecyActivity" /> <!-- 多渠道打包名字 -->
+        <activity android:name=".recyclerview.custom.test.XRecyActivity" /> <!-- 多渠道打包名字 -->
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />

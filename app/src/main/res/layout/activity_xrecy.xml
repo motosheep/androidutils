@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.north.light.androidutils.recyclerview.x.XRecyclerView
+    <com.north.light.androidutils.recyclerview.custom.x.XRecyclerView
         android:id="@+id/test_recy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

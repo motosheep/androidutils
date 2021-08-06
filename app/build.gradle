@@ -102,6 +102,8 @@ dependencies {
     api project(":libshare")
     //lib serail port
     api project(":libserailport")
+    //lib xrecyclerview
+    api project(":libxrecyclerview")
 
     //wechat
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
