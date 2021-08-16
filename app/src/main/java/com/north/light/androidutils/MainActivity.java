@@ -13,6 +13,7 @@ import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
+import com.north.light.androidutils.network.NetStatusActivity;
 import com.north.light.androidutils.novel.NovelActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
@@ -87,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SDkSmartActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_netstatus).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NetStatusActivity.class);
                 startActivity(intent);
             }
         });
