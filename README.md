@@ -99,3 +99,7 @@
 1音频焦点管理类AudioFocusManager
 
 2logUtil日志打印类
+
+20210816
+
+1增加网络状态监听工具类
