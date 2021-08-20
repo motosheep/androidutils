@@ -15,10 +15,9 @@ import com.north.light.libumeng.impl.UMNoActivityImpl;
  * @Author: lzt
  * @CreateDate: 2021/7/28 16:07
  * @Version: 1.0
- * @Description:友盟管理类
- * 61011d8026e9627944aac7c7
+ * @Description:友盟管理类 61011d8026e9627944aac7c7
  */
-public class UMManager implements UMManagerApi {
+class UMManager implements UMManagerApi {
     /**
      * 是否初始化sdk标识
      */
@@ -140,6 +139,11 @@ public class UMManager implements UMManagerApi {
     @Override
     public CollectMode getCollectMode() {
         return umInit.getCollectMode();
+    }
+
+    @Override
+    public void release() {
+
     }
 
 

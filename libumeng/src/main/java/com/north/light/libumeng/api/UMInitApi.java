@@ -33,4 +33,9 @@ public interface UMInitApi {
      * 获取当前数据收集模式
      */
     public CollectMode getCollectMode();
+
+    /**
+     * 释放资源
+     */
+    public void release();
 }
