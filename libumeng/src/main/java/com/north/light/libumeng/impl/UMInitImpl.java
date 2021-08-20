@@ -53,6 +53,11 @@ public class UMInitImpl implements UMInitApi {
         return mCollectMode;
     }
 
+    @Override
+    public void release() {
+
+    }
+
     /**
      * 初始化数据收集模式
      * mode:1--auto   2--manual  3--LEGACY_auto  4--LEGACY_MANUAL

@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".network.NetStatusActivity"></activity>
+        <activity android:name=".drawer.DrawerActivity"></activity>
+        <activity android:name=".network.NetStatusActivity" />
         <activity android:name=".recyclerview.sdk.SDkSmartActivity" />
         <activity android:name=".recyclerview.sdk.SDKXrecyclerviewActivity" />
         <activity android:name=".audio.ui.AudioActivity" />

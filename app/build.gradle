@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.xuexiang.xaop' //引用xaop插件
 apply plugin: 'android-aspectjx' //引用aspectjx插件
 
+
+//添加kotlin相关插件
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
     signingConfigs {
         debug {
@@ -60,7 +65,7 @@ android {
     // 3 设置输出APK名称
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName ="app_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
+            outputFileName = "app_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
         }
     }
     compileOptions {
@@ -106,11 +111,9 @@ dependencies {
     api project(":libxrecyclerview")
 
     //smart refresh
-    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.3'
-    implementation  'com.scwang.smart:refresh-header-classics:2.0.3'
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'
 
     //wechat
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
-
-
