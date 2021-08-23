@@ -13,6 +13,7 @@ import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
+import com.north.light.androidutils.dagger.DaggerActivity;
 import com.north.light.androidutils.drawer.DrawerActivity;
 import com.north.light.androidutils.network.NetStatusActivity;
 import com.north.light.androidutils.novel.NovelActivity;
@@ -103,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DrawerActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_dagger).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DaggerActivity.class);
                 startActivity(intent);
             }
         });

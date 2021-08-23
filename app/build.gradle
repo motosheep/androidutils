@@ -116,4 +116,8 @@ dependencies {
 
     //wechat
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+
+    //dagger
+    implementation 'com.google.dagger:dagger:2.38.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.38.1'
 }
