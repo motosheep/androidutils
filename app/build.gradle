@@ -109,6 +109,8 @@ dependencies {
     api project(":libserailport")
     //lib xrecyclerview
     api project(":libxrecyclerview")
+    //lib ble
+    api project(":libble")
 
     //smart refresh
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
