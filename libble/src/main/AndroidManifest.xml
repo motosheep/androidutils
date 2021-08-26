@@ -1,2 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.north.light.libble" />
+    package="com.north.light.libble">
+
+    <!-- 蓝牙权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application>
+
+        <provider
+            android:name=".content.BLEContentProvider"
+            android:authorities="${applicationId}.blecontentprovider"
+            android:exported="false" />
+
+    </application>
+</manifest>
