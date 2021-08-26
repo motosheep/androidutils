@@ -9,6 +9,8 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.north.light.libble.BLEManager;
+
 /**
  * author:li
  * date:2021/8/26
@@ -24,6 +26,7 @@ class BLEContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mContext = getContext().getApplicationContext();
+        BLEManager.getInstance().init();
         return false;
     }
 

@@ -1,4 +1,4 @@
-package com.north.light.libble.model;
+package com.north.light.libble.api;
 
 /**
  * author:li
@@ -11,6 +11,16 @@ public interface BLESwitchApi {
      * 是否打开蓝牙
      */
     boolean isOpenBLE();
+
+    /**
+     * 打开蓝牙
+     */
+    boolean openBLE();
+
+    /**
+     * 关闭蓝牙
+     */
+    boolean closeBLE();
 
 
 }
