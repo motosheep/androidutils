@@ -76,6 +76,12 @@
             android:layout_height="wrap_content"
             android:text="dagger" />
 
+        <Button
+            android:id="@+id/activity_main_ble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ble" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -16,7 +16,7 @@ import com.north.light.libble.BLEManager;
  * date:2021/8/26
  * desc:ble content provider
  */
-class BLEContentProvider extends ContentProvider {
+public class BLEContentProvider extends ContentProvider {
 
     /**
      * content

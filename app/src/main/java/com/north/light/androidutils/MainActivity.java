@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.audio.ui.AudioActivity;
+import com.north.light.androidutils.ble.BLEActivity;
 import com.north.light.androidutils.brand.BrandUtils;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
@@ -114,6 +115,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        findViewById(R.id.activity_main_ble).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BLEActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 }

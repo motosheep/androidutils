@@ -1,6 +1,11 @@
 package com.north.light.libble.model;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.os.Build;
+
+import com.north.light.libble.content.BLEContext;
 
 /**
  * author:li
@@ -20,7 +25,9 @@ public class BLEObjProvider {
     }
 
     public BLEObjProvider() {
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothManager manager = (BluetoothManager) BLEContext.getInstance().getAppContext()
+                .getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = manager.getAdapter();
     }
 
     public BluetoothAdapter getBluetoothAdapter() {

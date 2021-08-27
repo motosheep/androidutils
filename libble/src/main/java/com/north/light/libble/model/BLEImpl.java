@@ -29,7 +29,6 @@ public class BLEImpl implements BLEModelApi {
 
     public BLEImpl() {
         BLELog.d(getClass().getSimpleName(), "BLEImpl 构造函数");
-        init();
     }
 
 
@@ -37,7 +36,12 @@ public class BLEImpl implements BLEModelApi {
      * 初始化--全局只能调用一次
      */
     public void init() {
-        IntentFilter scanFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        BLELog.d(getClass().getSimpleName(), "BLEImpl init");
+        IntentFilter scanFilter = new IntentFilter();
+        scanFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        scanFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        // 两种情况会触发ACTION_DISCOVERY_FINISHED：1.系统结束扫描（约12秒）；2.调用cancelDiscovery()方法主动结束扫描
+        scanFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         BLEContext.getInstance().getAppContext().registerReceiver(scanReceiver, scanFilter);
     }
 
@@ -105,16 +109,27 @@ public class BLEImpl implements BLEModelApi {
     private final BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            // 当 Discovery 发现了一个设备
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // 从 Intent 中获取发现的 BluetoothDevice
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // 将名字和地址放入要显示的适配器中
-                ArrayList<BluetoothDevice> result = new ArrayList<>();
-                result.add(device);
-                for (BLEScanResultListener listener : mListener) {
-                    listener.result(result);
-                }
+            if (action == null) {
+                return;
+            }
+            switch (action) {
+                case BluetoothDevice.ACTION_FOUND:
+                    // 从 Intent 中获取发现的 BluetoothDevice
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    // 将名字和地址放入要显示的适配器中
+                    ArrayList<BluetoothDevice> result = new ArrayList<>();
+                    result.add(device);
+                    for (BLEScanResultListener listener : mListener) {
+                        listener.result(result);
+                    }
+                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_FOUND");
+                    break;
+                case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_DIS_START");
+                    break;
+                case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_DIS_FINISH");
+                    break;
             }
         }
     };
