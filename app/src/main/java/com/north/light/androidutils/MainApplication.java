@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.north.light.androidutils.activitycounter.ActivityCounter;
 import com.north.light.androidutils.audio.focus.AudioFocusManager;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * @Author: lzt
@@ -22,6 +23,9 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this);
+        }
         mContext = this;
         AudioFocusManager.getInstance().init(this);
         ActivityCounter.getInstance().init(this);

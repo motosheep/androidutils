@@ -26,6 +26,9 @@ public class BLEActivity extends AppCompatActivity {
     private String UUID = "00001115ab-0000-1000-8000-00805f9B34FB";
     private BLEStringRecyclerView ble;
 
+    /**
+     * 蓝牙扫描结果
+     * */
     private BLEScanResultListener scanResultListener = new BLEScanResultListener() {
         @Override
         public void result(List<BLEInfo> result) {
@@ -47,9 +50,7 @@ public class BLEActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
-         ble = findViewById(R.id.activity_ble_content);
-        //设置服务端--外部连接监听
-        BLEManager.getBLEObj().receive(UUID);
+        ble = findViewById(R.id.activity_ble_content);
         BLEManager.getBLEObj().setOnResultListener(scanResultListener);
         ble.setOnClickEvent(new BLEStringRecyclerView.OnClickEvent() {
             @Override
@@ -62,6 +63,7 @@ public class BLEActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                //连接
                 BLEManager.getBLEObj().connect(obj, UUID);
             }
         });
@@ -109,10 +111,34 @@ public class BLEActivity extends AppCompatActivity {
                 BLEManager.getBLEObj().sendData(text);
             }
         });
+
+        findViewById(R.id.setreceive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //设置服务端--外部连接监听
+                BLEManager.getBLEObj().receive(UUID);
+            }
+        });
+
+        findViewById(R.id.disreceive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //断开服务端
+                BLEManager.getBLEObj().disReceive();
+            }
+        });
+        findViewById(R.id.disconnect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //断开客户端
+                BLEManager.getBLEObj().disConnect();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
+        ble.removeOnClickEvent();
         BLEManager.getBLEObj().removeResultListener(scanResultListener);
         BLEManager.getBLEObj().releaseAll();
         super.onDestroy();

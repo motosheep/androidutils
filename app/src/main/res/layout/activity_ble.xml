@@ -61,5 +61,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="close" />
+
+        <Button
+            android:id="@+id/setreceive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="set-receive" />
+
+        <Button
+            android:id="@+id/disreceive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="disable-receive" />
+
+        <Button
+            android:id="@+id/disconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="disconnect" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

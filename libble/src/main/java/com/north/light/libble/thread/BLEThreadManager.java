@@ -1,7 +1,7 @@
 package com.north.light.libble.thread;
 
-import android.os.Handler;
-import android.os.HandlerThread;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * author:li
@@ -9,9 +9,7 @@ import android.os.HandlerThread;
  * desc:蓝牙线程管理
  */
 public class BLEThreadManager {
-
-    private Handler mCacheHandler;
-    private HandlerThread mCacheThread;
+    private ExecutorService mCacheThread = Executors.newCachedThreadPool();
 
     private static class SingleHolder {
         static BLEThreadManager mInstance = new BLEThreadManager();
@@ -22,13 +20,7 @@ public class BLEThreadManager {
     }
 
     public BLEThreadManager() {
-        if (mCacheThread == null) {
-            mCacheThread = new HandlerThread(BLEThreadManager.class.getSimpleName() + "cache");
-            mCacheThread.start();
-        }
-        if (mCacheHandler == null) {
-            mCacheHandler = new Handler(mCacheThread.getLooper());
-        }
+
     }
 
     /**
@@ -38,13 +30,9 @@ public class BLEThreadManager {
 
     }
 
-    public Handler getCacheHandler() {
-        return mCacheHandler;
+    public ExecutorService getCacheHandler() {
+        return mCacheThread;
     }
 
-    public void releaseCacheHandler() {
-        if (mCacheHandler != null) {
-            mCacheHandler.removeCallbacksAndMessages(null);
-        }
-    }
+
 }

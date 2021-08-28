@@ -68,24 +68,28 @@ public class BLEConnectManager {
         if (!checkBLE(mCurrentBLEInfo)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                releaseSend();
-                try {
-                    //开始连接
-                    mSendSocket = mCurrentBLEInfo.getDevice().createRfcommSocketToServiceRecord(UUID.fromString(uuid));
-                    mSendSocket.connect();
-                    mIsConnectRemote = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    releaseSend();
-                    mIsConnectRemote = false;
-                }
-            }
-        });
+        BLEThreadManager.getInstance().getCacheHandler().execute(mConnectRunnable);
     }
 
+    /**
+     * 连接runnable
+     * */
+    private Runnable mConnectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            releaseSend();
+            try {
+                //开始连接
+                mSendSocket = mCurrentBLEInfo.getDevice().createRfcommSocketToServiceRecord(UUID.fromString(mCurrentSendUUID));
+                mSendSocket.connect();
+                mIsConnectRemote = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                releaseSend();
+                mIsConnectRemote = false;
+            }
+        }
+    };
 
     /**
      * 监听
@@ -96,7 +100,7 @@ public class BLEConnectManager {
         if (TextUtils.isEmpty(mCurrentReceiveUUID)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().post(mReceiveRunnable);
+        BLEThreadManager.getInstance().getCacheHandler().execute(mReceiveRunnable);
     }
 
     /**
@@ -142,7 +146,7 @@ public class BLEConnectManager {
         if (TextUtils.isEmpty(data)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().post(new Runnable() {
+        BLEThreadManager.getInstance().getCacheHandler().execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -163,7 +167,6 @@ public class BLEConnectManager {
 
     }
 
-
     public void disconnect() {
         releaseSend();
     }
@@ -172,13 +175,10 @@ public class BLEConnectManager {
         releaseReceive();
     }
 
-
     public void releaseAll() {
         disReceive();
         disconnect();
-        BLEThreadManager.getInstance().releaseCacheHandler();
     }
-
 
     /**
      * 释放发送的监听
