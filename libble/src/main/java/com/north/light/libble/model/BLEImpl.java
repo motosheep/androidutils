@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
 import com.north.light.libble.api.BLEModelApi;
+import com.north.light.libble.bean.BLEInfo;
 import com.north.light.libble.listener.BLEBroadcastListener;
 import com.north.light.libble.listener.BLEScanResultListener;
 import com.north.light.libble.receiver.BLEBroadcastReceiver;
@@ -59,7 +60,7 @@ public class BLEImpl implements BLEModelApi {
         }
 
         @Override
-        public void discoveryDevice(List<BluetoothDevice> deviceList) {
+        public void discoveryDevice(List<BLEInfo> deviceList) {
             BLELog.d(TAG, "discoveryDevice");
         }
 
@@ -84,32 +85,32 @@ public class BLEImpl implements BLEModelApi {
         }
 
         @Override
-        public void remoteConnected(BluetoothDevice device) {
+        public void remoteConnected(BLEInfo device) {
             BLELog.d(TAG, "remoteConnected");
         }
 
         @Override
-        public void removeDisconnected(BluetoothDevice device) {
+        public void removeDisconnected(BLEInfo device) {
             BLELog.d(TAG, "removeDisconnected");
         }
 
         @Override
-        public void connecting(BluetoothDevice device) {
+        public void connecting(BLEInfo device) {
             BLELog.d(TAG, "connecting");
         }
 
         @Override
-        public void connected(BluetoothDevice device) {
+        public void connected(BLEInfo device) {
             BLELog.d(TAG, "connected");
         }
 
         @Override
-        public void disConnecting(BluetoothDevice device) {
+        public void disConnecting(BLEInfo device) {
             BLELog.d(TAG, "disConnecting");
         }
 
         @Override
-        public void disconnected(BluetoothDevice device) {
+        public void disconnected(BLEInfo device) {
             BLELog.d(TAG, "disconnected");
         }
     };

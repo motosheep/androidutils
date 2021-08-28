@@ -19,6 +19,10 @@ public interface BLEFunctionApi {
      */
     boolean stopScan();
 
+//    /**
+//     * 连接蓝牙
+//     * */
+//    boolean connect();
 
 
 

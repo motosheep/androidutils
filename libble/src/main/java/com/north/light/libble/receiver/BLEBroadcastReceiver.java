@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.north.light.libble.bean.BLEInfo;
 import com.north.light.libble.content.BLEContext;
 import com.north.light.libble.listener.BLEBroadcastListener;
 import com.north.light.libble.utils.BLELog;
@@ -84,9 +85,10 @@ public class BLEBroadcastReceiver {
                 case BluetoothDevice.ACTION_FOUND:
                     // 从 Intent 中获取发现的 BluetoothDevice
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    short rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MAX_VALUE);
                     // 将名字和地址放入要显示的适配器中
-                    ArrayList<BluetoothDevice> result = new ArrayList<>();
-                    result.add(device);
+                    ArrayList<BLEInfo> result = new ArrayList<>();
+                    result.add(new BLEInfo(device, rssi));
                     for (BLEBroadcastListener listener : mListener) {
                         listener.discoveryDevice(result);
                     }
@@ -165,28 +167,28 @@ public class BLEBroadcastReceiver {
                         //蓝牙连接中
                         case BluetoothAdapter.STATE_CONNECTING: {
                             for (BLEBroadcastListener listener : mListener) {
-                                listener.connecting(device);
+                                listener.connecting(new BLEInfo(device));
                             }
                             break;
                         }
                         //蓝牙已连接
                         case BluetoothAdapter.STATE_CONNECTED: {
                             for (BLEBroadcastListener listener : mListener) {
-                                listener.connected(device);
+                                listener.connected(new BLEInfo(device));
                             }
                             break;
                         }
                         //蓝牙断开连接中
                         case BluetoothAdapter.STATE_DISCONNECTING: {
                             for (BLEBroadcastListener listener : mListener) {
-                                listener.disConnecting(device);
+                                listener.disConnecting(new BLEInfo(device));
                             }
                             break;
                         }
                         //蓝牙已断开连接
                         case BluetoothAdapter.STATE_DISCONNECTED: {
                             for (BLEBroadcastListener listener : mListener) {
-                                listener.disconnected(device);
+                                listener.disconnected(new BLEInfo(device));
                             }
                             break;
                         }
@@ -196,14 +198,14 @@ public class BLEBroadcastReceiver {
                     //有远程设备成功连接至本机
                     BluetoothDevice connectDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     for (BLEBroadcastListener listener : mListener) {
-                        listener.remoteConnected(connectDevice);
+                        listener.remoteConnected(new BLEInfo(connectDevice));
                     }
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     //有远程设备断开连接
                     BluetoothDevice disConnectDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     for (BLEBroadcastListener listener : mListener) {
-                        listener.removeDisconnected(disConnectDevice);
+                        listener.removeDisconnected(new BLEInfo(disConnectDevice));
                     }
                     break;
             }

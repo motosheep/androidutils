@@ -1,6 +1,7 @@
 package com.north.light.libble.listener;
 
-import android.bluetooth.BluetoothDevice;
+
+import com.north.light.libble.bean.BLEInfo;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface BLEBroadcastListener {
     /**
      * 搜索得到的设备
      */
-    void discoveryDevice(List<BluetoothDevice> deviceList);
+    void discoveryDevice(List<BLEInfo> deviceList);
 
 
     //状态类---------------------------------------------------------------------------
@@ -54,31 +55,31 @@ public interface BLEBroadcastListener {
     /**
      * 远程设备连接到本机
      */
-    void remoteConnected(BluetoothDevice device);
+    void remoteConnected(BLEInfo device);
 
     /**
      * 远程设备与本机断开连接
      */
-    void removeDisconnected(BluetoothDevice device);
+    void removeDisconnected(BLEInfo device);
 
     /**
      * 蓝牙连接中
      */
-    void connecting(BluetoothDevice device);
+    void connecting(BLEInfo device);
 
     /**
      * 蓝牙已连接
-     * */
-    void connected(BluetoothDevice device);
+     */
+    void connected(BLEInfo device);
 
     /**
      * 断开中
-     * */
-    void disConnecting(BluetoothDevice device);
+     */
+    void disConnecting(BLEInfo device);
 
     /**
      * 已断开
-     * */
-    void disconnected(BluetoothDevice device);
+     */
+    void disconnected(BLEInfo device);
 
 }
