@@ -2,17 +2,14 @@ package com.north.light.libble.model;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 
 import com.north.light.libble.api.BLEModelApi;
-import com.north.light.libble.content.BLEContext;
+import com.north.light.libble.listener.BLEBroadcastListener;
 import com.north.light.libble.listener.BLEScanResultListener;
+import com.north.light.libble.receiver.BLEBroadcastReceiver;
 import com.north.light.libble.utils.BLELog;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -21,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * desc:蓝牙功能集成类
  */
 public class BLEImpl implements BLEModelApi {
+    public final String TAG = BLEImpl.class.getSimpleName();
     /**
      * 监听集合
      */
@@ -28,7 +26,7 @@ public class BLEImpl implements BLEModelApi {
 
 
     public BLEImpl() {
-        BLELog.d(getClass().getSimpleName(), "BLEImpl 构造函数");
+        BLELog.d(TAG, "BLEImpl 构造函数");
     }
 
 
@@ -36,21 +34,85 @@ public class BLEImpl implements BLEModelApi {
      * 初始化--全局只能调用一次
      */
     public void init() {
-        BLELog.d(getClass().getSimpleName(), "BLEImpl init");
-        IntentFilter scanFilter = new IntentFilter();
-        scanFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        scanFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        // 两种情况会触发ACTION_DISCOVERY_FINISHED：1.系统结束扫描（约12秒）；2.调用cancelDiscovery()方法主动结束扫描
-        scanFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        BLEContext.getInstance().getAppContext().registerReceiver(scanReceiver, scanFilter);
+        BLELog.d(TAG, "BLEImpl init");
+        BLEBroadcastReceiver.getInstance().setOnListener(bleBroadcastListener);
+        BLEBroadcastReceiver.getInstance().init();
     }
 
     /**
      * 结束--与init对应使用
      */
     public void release() {
-        BLEContext.getInstance().getAppContext().unregisterReceiver(scanReceiver);
+        BLEBroadcastReceiver.getInstance().removeListener(bleBroadcastListener);
+        BLEBroadcastReceiver.getInstance().release();
     }
+
+    private BLEBroadcastListener bleBroadcastListener = new BLEBroadcastListener() {
+        @Override
+        public void startDiscovery() {
+            BLELog.d(TAG, "startDiscovery");
+        }
+
+        @Override
+        public void stopDiscovery() {
+            BLELog.d(TAG, "stopDiscovery");
+        }
+
+        @Override
+        public void discoveryDevice(List<BluetoothDevice> deviceList) {
+            BLELog.d(TAG, "discoveryDevice");
+        }
+
+        @Override
+        public void opening() {
+            BLELog.d(TAG, "opening");
+        }
+
+        @Override
+        public void opened() {
+            BLELog.d(TAG, "opened");
+        }
+
+        @Override
+        public void closing() {
+            BLELog.d(TAG, "closing");
+        }
+
+        @Override
+        public void closed() {
+            BLELog.d(TAG, "closed");
+        }
+
+        @Override
+        public void remoteConnected(BluetoothDevice device) {
+            BLELog.d(TAG, "remoteConnected");
+        }
+
+        @Override
+        public void removeDisconnected(BluetoothDevice device) {
+            BLELog.d(TAG, "removeDisconnected");
+        }
+
+        @Override
+        public void connecting(BluetoothDevice device) {
+            BLELog.d(TAG, "connecting");
+        }
+
+        @Override
+        public void connected(BluetoothDevice device) {
+            BLELog.d(TAG, "connected");
+        }
+
+        @Override
+        public void disConnecting(BluetoothDevice device) {
+            BLELog.d(TAG, "disConnecting");
+        }
+
+        @Override
+        public void disconnected(BluetoothDevice device) {
+            BLELog.d(TAG, "disconnected");
+        }
+    };
 
 
     @Override
@@ -60,7 +122,7 @@ public class BLEImpl implements BLEModelApi {
             adapter.cancelDiscovery();
             return adapter.startDiscovery();
         } catch (Exception e) {
-            BLELog.d(getClass().getSimpleName() + "scanDevice error:", e.getMessage());
+            BLELog.d(TAG + "scanDevice error:", e.getMessage());
         }
         return false;
     }
@@ -70,7 +132,7 @@ public class BLEImpl implements BLEModelApi {
         try {
             return BLEObjProvider.getInstance().getBluetoothAdapter().cancelDiscovery();
         } catch (Exception e) {
-            BLELog.d(getClass().getSimpleName() + "stopScan error:", e.getMessage());
+            BLELog.d(TAG + "stopScan error:", e.getMessage());
         }
         return false;
     }
@@ -80,7 +142,7 @@ public class BLEImpl implements BLEModelApi {
         try {
             return BLEObjProvider.getInstance().getBluetoothAdapter().isEnabled();
         } catch (Exception e) {
-            BLELog.d(getClass().getSimpleName() + "isOpen error:", e.getMessage());
+            BLELog.d(TAG + "isOpen error:", e.getMessage());
             return false;
         }
     }
@@ -90,7 +152,7 @@ public class BLEImpl implements BLEModelApi {
         try {
             return BLEObjProvider.getInstance().getBluetoothAdapter().enable();
         } catch (Exception e) {
-            BLELog.d(getClass().getSimpleName() + "open error:", e.getMessage());
+            BLELog.d(TAG + "open error:", e.getMessage());
             return false;
         }
     }
@@ -100,39 +162,10 @@ public class BLEImpl implements BLEModelApi {
         try {
             return BLEObjProvider.getInstance().getBluetoothAdapter().disable();
         } catch (Exception e) {
-            BLELog.d(getClass().getSimpleName() + "close error:", e.getMessage());
+            BLELog.d(TAG + "close error:", e.getMessage());
             return false;
         }
     }
-
-    //蓝牙搜索发现广播
-    private final BroadcastReceiver scanReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action == null) {
-                return;
-            }
-            switch (action) {
-                case BluetoothDevice.ACTION_FOUND:
-                    // 从 Intent 中获取发现的 BluetoothDevice
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    // 将名字和地址放入要显示的适配器中
-                    ArrayList<BluetoothDevice> result = new ArrayList<>();
-                    result.add(device);
-                    for (BLEScanResultListener listener : mListener) {
-                        listener.result(result);
-                    }
-                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_FOUND");
-                    break;
-                case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
-                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_DIS_START");
-                    break;
-                case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
-                    BLELog.d(getClass().getSimpleName() + "SCAN", "BroadcastReceiver ACTION_DIS_FINISH");
-                    break;
-            }
-        }
-    };
 
     @Override
     public void setOnResultListener(BLEScanResultListener listener) {

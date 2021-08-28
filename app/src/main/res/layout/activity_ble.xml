@@ -18,6 +18,13 @@ android:orientation="vertical"    xmlns:tools="http://schemas.android.com/tools"
         android:text="scan" />
 
     <Button
+        android:id="@+id/stopScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="stopScan" />
+
+
+    <Button
         android:id="@+id/open"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

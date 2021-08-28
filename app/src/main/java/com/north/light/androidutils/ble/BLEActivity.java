@@ -44,5 +44,11 @@ public class BLEActivity extends AppCompatActivity {
                 LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().closeBLE()：" + BLEManager.getBLEObj().closeBLE());
             }
         });
+        findViewById(R.id.stopScan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().stopScan()：" + BLEManager.getBLEObj().stopScan());
+            }
+        });
     }
 }
