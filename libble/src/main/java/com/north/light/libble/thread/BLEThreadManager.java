@@ -1,5 +1,8 @@
 package com.north.light.libble.thread;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,6 +13,7 @@ import java.util.concurrent.Executors;
  */
 public class BLEThreadManager {
     private ExecutorService mCacheThread = Executors.newCachedThreadPool();
+    private Handler mHandler;
 
     private static class SingleHolder {
         static BLEThreadManager mInstance = new BLEThreadManager();
@@ -27,12 +31,22 @@ public class BLEThreadManager {
      * 必须在application进行初始化
      */
     public void init() {
-
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
     }
 
-    public ExecutorService getCacheHandler() {
+    public ExecutorService getCachePool() {
         return mCacheThread;
     }
 
+    public Handler getHandler() {
+        return mHandler;
+    }
 
+    public void releaseHandler() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
 }

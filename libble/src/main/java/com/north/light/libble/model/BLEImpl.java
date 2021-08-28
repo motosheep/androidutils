@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import com.north.light.libble.api.BLEModelApi;
 import com.north.light.libble.bean.BLEInfo;
 import com.north.light.libble.listener.BLEBroadcastListener;
+import com.north.light.libble.listener.BLEDataListener;
 import com.north.light.libble.listener.BLEScanResultListener;
 import com.north.light.libble.receiver.BLEBroadcastReceiver;
 import com.north.light.libble.utils.BLELog;
@@ -36,6 +37,7 @@ public class BLEImpl implements BLEModelApi {
     public void init() {
         BLELog.d(TAG, "BLEImpl init");
         BLEBroadcastReceiver.getInstance().setOnListener(bleBroadcastListener);
+        BLEConnectManager.getInstance().setBLEDataListener(dataListener);
         BLEBroadcastReceiver.getInstance().init();
     }
 
@@ -44,9 +46,58 @@ public class BLEImpl implements BLEModelApi {
      */
     public void release() {
         BLEBroadcastReceiver.getInstance().removeListener(bleBroadcastListener);
+        BLEConnectManager.getInstance().removeBLEDataListener(dataListener);
         BLEBroadcastReceiver.getInstance().release();
     }
 
+    /**
+     * 蓝牙数据监听
+     */
+    private BLEDataListener dataListener = new BLEDataListener() {
+        @Override
+        public void sendCallBack(boolean success, String data) {
+            BLELog.d(TAG, "sendCallBack success: " + success + "\tdata: " + data);
+        }
+
+        @Override
+        public void receiveCallBack(String data) {
+            BLELog.d(TAG, "receiveCallBack: " + data);
+        }
+
+        @Override
+        public void connecting() {
+            BLELog.d(TAG, "connecting");
+        }
+
+        @Override
+        public void connectSuccess() {
+            BLELog.d(TAG, "connectSuccess");
+        }
+
+        @Override
+        public void connectFailed() {
+            BLELog.d(TAG, "connectFailed");
+        }
+
+        @Override
+        public void receiveAccept() {
+            BLELog.d(TAG, "receiveAccept");
+        }
+
+        @Override
+        public void receivingSuccess() {
+            BLELog.d(TAG, "receivingSuccess");
+        }
+
+        @Override
+        public void receiveFailed() {
+            BLELog.d(TAG, "receiveFailed");
+        }
+    };
+
+    /**
+     * 蓝牙广播监听
+     */
     private BLEBroadcastListener bleBroadcastListener = new BLEBroadcastListener() {
         @Override
         public void startDiscovery() {
@@ -210,5 +261,15 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public void releaseAll() {
         BLEConnectManager.getInstance().releaseAll();
+    }
+
+    @Override
+    public void clientAutoConnect(boolean auto) {
+        BLEConnectManager.getInstance().clientAutoConnect(auto);
+    }
+
+    @Override
+    public void serverAutoAccept(boolean auto) {
+        BLEConnectManager.getInstance().serverAutoAccept(auto);
     }
 }

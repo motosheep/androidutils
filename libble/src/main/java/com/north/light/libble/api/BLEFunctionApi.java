@@ -46,7 +46,17 @@ public interface BLEFunctionApi {
 
     /**
      * 释放所有
-     * */
+     */
     void releaseAll();
+
+    /**
+     * 客户端是否自动重连--每次使用都要重新设置
+     */
+    void clientAutoConnect(boolean auto);
+
+    /**
+     * 服务端自动监听--每次使用都要重新设置
+     */
+    void serverAutoAccept(boolean auto);
 
 }

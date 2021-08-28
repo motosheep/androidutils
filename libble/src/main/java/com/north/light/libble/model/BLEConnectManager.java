@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import android.text.TextUtils;
 
 import com.north.light.libble.bean.BLEInfo;
+import com.north.light.libble.listener.BLEDataListener;
 import com.north.light.libble.thread.BLEThreadManager;
 import com.north.light.libble.utils.BLELog;
 
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * author:li
@@ -43,7 +45,21 @@ public class BLEConnectManager {
     //读取数据中间缓存变量
     private static String readTxt;
     private static byte[] cacheByte;
+    //监听数据集合
+    private CopyOnWriteArrayList<BLEDataListener> mListener = new CopyOnWriteArrayList<>();
+    //自动重连标识
+    private static boolean mClientAutoConnect = false;
+    private final long TIME_CLIENT_RECONNECT = 1200;
+    private static boolean mServerAutoAccept = false;
+    private final long TIME_SERVER_ACCEPT = 1200;
 
+    public void clientAutoConnect(boolean auto) {
+        mClientAutoConnect = auto;
+    }
+
+    public void serverAutoAccept(boolean auto) {
+        mServerAutoAccept = auto;
+    }
 
     private static class SingleHolder {
         static BLEConnectManager mInstance = new BLEConnectManager();
@@ -68,26 +84,45 @@ public class BLEConnectManager {
         if (!checkBLE(mCurrentBLEInfo)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().execute(mConnectRunnable);
+        BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoConnectClientRunnable);
+        BLEThreadManager.getInstance().getCachePool().execute(mConnectRunnable);
     }
 
     /**
      * 连接runnable
-     * */
+     */
     private Runnable mConnectRunnable = new Runnable() {
         @Override
         public void run() {
             releaseSend();
             try {
+                notifyStatus(1);
                 //开始连接
                 mSendSocket = mCurrentBLEInfo.getDevice().createRfcommSocketToServiceRecord(UUID.fromString(mCurrentSendUUID));
                 mSendSocket.connect();
                 mIsConnectRemote = true;
+                notifyStatus(2);
             } catch (Exception e) {
                 e.printStackTrace();
                 releaseSend();
                 mIsConnectRemote = false;
+                notifyStatus(3);
+                if (mClientAutoConnect) {
+                    BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoConnectClientRunnable);
+                    BLEThreadManager.getInstance().getHandler().postDelayed(mAutoConnectClientRunnable, TIME_CLIENT_RECONNECT);
+                }
             }
+        }
+    };
+
+    /**
+     * 自动重连客户端runnable
+     */
+    private Runnable mAutoConnectClientRunnable = new Runnable() {
+        @Override
+        public void run() {
+            BLELog.d(TAG, "客户端自动重连");
+            connect(mCurrentBLEInfo, mCurrentSendUUID);
         }
     };
 
@@ -100,7 +135,8 @@ public class BLEConnectManager {
         if (TextUtils.isEmpty(mCurrentReceiveUUID)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().execute(mReceiveRunnable);
+        BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoServerAccept);
+        BLEThreadManager.getInstance().getCachePool().execute(mReceiveRunnable);
     }
 
     /**
@@ -110,6 +146,7 @@ public class BLEConnectManager {
         @Override
         public void run() {
             try {
+                notifyStatus(4);
                 mServerSocket = BLEObjProvider.getInstance().getBluetoothAdapter()
                         .listenUsingInsecureRfcommWithServiceRecord(
                                 "SERVER", UUID.fromString(mCurrentReceiveUUID));
@@ -119,6 +156,7 @@ public class BLEConnectManager {
                 mServerSocket.close();
                 mIsBeConnectEd = true;
                 BLELog.d(TAG, "等待连接2");
+                notifyStatus(5);
                 //被连接后，监听连接
                 while (mIsBeConnectEd) {
                     //使用byte固定长度进行读取，不使用read line原因是其会导致阻塞
@@ -127,15 +165,34 @@ public class BLEConnectManager {
                     readTxt = new String(cacheByte, 0, length);
                     if (!TextUtils.isEmpty(readTxt)) {
                         BLELog.d(TAG, "接收信息：" + readTxt);
+                        for (BLEDataListener listener : mListener) {
+                            listener.receiveCallBack(readTxt);
+                        }
                     }
                 }
                 //已经取消了监听
                 releaseReceive();
             } catch (Exception e) {
-                BLELog.d(TAG, "接收信息 IOException：" + e.getMessage());
+                BLELog.d(TAG, "接收信息 Exception：" + e.getMessage());
                 e.printStackTrace();
                 releaseReceive();
+                notifyStatus(6);
+                if(mServerAutoAccept){
+                    BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoServerAccept);
+                    BLEThreadManager.getInstance().getHandler().postDelayed(mAutoServerAccept, TIME_SERVER_ACCEPT);
+                }
             }
+        }
+    };
+
+    /**
+     * 自动重试服务端接收
+     */
+    private Runnable mAutoServerAccept = new Runnable() {
+        @Override
+        public void run() {
+            BLELog.d(TAG, "服务端自动重连");
+            receive(mCurrentReceiveUUID);
         }
     };
 
@@ -146,7 +203,7 @@ public class BLEConnectManager {
         if (TextUtils.isEmpty(data)) {
             return;
         }
-        BLEThreadManager.getInstance().getCacheHandler().execute(new Runnable() {
+        BLEThreadManager.getInstance().getCachePool().execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -159,8 +216,14 @@ public class BLEConnectManager {
                         mSendBufferedWriter.write(txt + "\n");
                     }
                     mSendBufferedWriter.flush();
+                    for (BLEDataListener listener : mListener) {
+                        listener.sendCallBack(true, data);
+                    }
                 } catch (Exception e) {
                     BLELog.d(TAG, "发送错误");
+                    for (BLEDataListener listener : mListener) {
+                        listener.sendCallBack(false, data);
+                    }
                 }
             }
         });
@@ -178,6 +241,9 @@ public class BLEConnectManager {
     public void releaseAll() {
         disReceive();
         disconnect();
+        clientAutoConnect(false);
+        serverAutoAccept(false);
+        BLEThreadManager.getInstance().releaseHandler();
     }
 
     /**
@@ -250,5 +316,41 @@ public class BLEConnectManager {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 监听---------------------------------------------------------------------------------------
+     */
+    public void setBLEDataListener(BLEDataListener listener) {
+        mListener.add(listener);
+    }
+
+    public void removeBLEDataListener(BLEDataListener listener) {
+        mListener.remove(listener);
+    }
+
+    private void notifyStatus(int type) {
+        for (BLEDataListener listener : mListener) {
+            switch (type) {
+                case 1:
+                    listener.connecting();
+                    break;
+                case 2:
+                    listener.connectSuccess();
+                    break;
+                case 3:
+                    listener.connectFailed();
+                    break;
+                case 4:
+                    listener.receiveAccept();
+                    break;
+                case 5:
+                    listener.receivingSuccess();
+                    break;
+                case 6:
+                    listener.receiveFailed();
+                    break;
+            }
+        }
     }
 }
