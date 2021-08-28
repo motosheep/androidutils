@@ -2,6 +2,7 @@ package com.north.light.libble;
 
 import com.north.light.libble.api.BLEModelApi;
 import com.north.light.libble.model.BLEImpl;
+import com.north.light.libble.thread.BLEThreadManager;
 
 /**
  * author:li
@@ -24,6 +25,7 @@ public class BLEManager {
     }
 
     public void init() {
+        BLEThreadManager.getInstance().init();
         SingleHolder.ble.init();
     }
 

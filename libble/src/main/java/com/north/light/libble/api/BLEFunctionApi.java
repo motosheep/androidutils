@@ -1,6 +1,6 @@
 package com.north.light.libble.api;
 
-import com.north.light.libble.listener.BLEScanResultListener;
+import com.north.light.libble.bean.BLEInfo;
 
 /**
  * author:li
@@ -19,11 +19,34 @@ public interface BLEFunctionApi {
      */
     boolean stopScan();
 
-//    /**
-//     * 连接蓝牙
-//     * */
-//    boolean connect();
+    /**
+     * 连接蓝牙
+     */
+    void connect(BLEInfo info, String uuid);
 
+    /**
+     * 断开连接
+     */
+    void disConnect();
 
+    /**
+     * 设置接收
+     */
+    void receive(String uuid);
+
+    /**
+     * 断开接收
+     */
+    void disReceive();
+
+    /**
+     * 发送数据
+     */
+    void sendData(String data);
+
+    /**
+     * 释放所有
+     * */
+    void releaseAll();
 
 }

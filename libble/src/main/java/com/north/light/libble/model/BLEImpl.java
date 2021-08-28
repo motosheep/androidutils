@@ -1,7 +1,6 @@
 package com.north.light.libble.model;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 
 import com.north.light.libble.api.BLEModelApi;
 import com.north.light.libble.bean.BLEInfo;
@@ -62,6 +61,9 @@ public class BLEImpl implements BLEModelApi {
         @Override
         public void discoveryDevice(List<BLEInfo> deviceList) {
             BLELog.d(TAG, "discoveryDevice");
+            for (BLEScanResultListener listener : mListener) {
+                listener.result(deviceList);
+            }
         }
 
         @Override
@@ -176,5 +178,37 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public void removeResultListener(BLEScanResultListener listener) {
         mListener.remove(listener);
+    }
+
+
+    @Override
+    public void connect(BLEInfo info, String uuid) {
+        stopScan();
+        BLEConnectManager.getInstance().connect(info, uuid);
+    }
+
+    @Override
+    public void disConnect() {
+        BLEConnectManager.getInstance().disconnect();
+    }
+
+    @Override
+    public void receive(String uuid) {
+        BLEConnectManager.getInstance().receive(uuid);
+    }
+
+    @Override
+    public void disReceive() {
+        BLEConnectManager.getInstance().disReceive();
+    }
+
+    @Override
+    public void sendData(String data) {
+        BLEConnectManager.getInstance().sendData(data);
+    }
+
+    @Override
+    public void releaseAll() {
+        BLEConnectManager.getInstance().releaseAll();
     }
 }
