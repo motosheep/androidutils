@@ -1,4 +1,4 @@
-package com.north.light.libble.api;
+package com.north.light.libble.model.api;
 
 import com.north.light.libble.bean.BLEInfo;
 

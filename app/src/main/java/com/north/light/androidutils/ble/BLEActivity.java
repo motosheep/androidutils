@@ -28,7 +28,7 @@ public class BLEActivity extends AppCompatActivity {
 
     /**
      * 蓝牙扫描结果
-     * */
+     */
     private BLEScanResultListener scanResultListener = new BLEScanResultListener() {
         @Override
         public void result(List<BLEInfo> result) {
@@ -44,6 +44,16 @@ public class BLEActivity extends AppCompatActivity {
         public void error(String tips) {
 
         }
+
+        @Override
+        public void startScan() {
+
+        }
+
+        @Override
+        public void stopScan() {
+
+        }
     };
 
     @Override
@@ -51,7 +61,7 @@ public class BLEActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
         ble = findViewById(R.id.activity_ble_content);
-        BLEManager.getBLEObj().setOnResultListener(scanResultListener);
+        BLEManager.getInstance().setOnResultListener(scanResultListener);
         ble.setOnClickEvent(new BLEStringRecyclerView.OnClickEvent() {
             @Override
             public void click(String data) {
@@ -64,14 +74,14 @@ public class BLEActivity extends AppCompatActivity {
                     }
                 }
                 //连接
-                BLEManager.getBLEObj().connect(obj, UUID);
+                BLEManager.getInstance().connect(obj, UUID);
             }
         });
         //点击事件
         findViewById(R.id.isOpen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().isOpenBLE()：" + BLEManager.getBLEObj().isOpenBLE());
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().isOpenBLE()：" + BLEManager.getInstance().isOpenBLE());
             }
         });
         findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
@@ -79,25 +89,25 @@ public class BLEActivity extends AppCompatActivity {
             public void onClick(View v) {
                 infoList.clear();
                 ble.resetData();
-                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().scanDevice()：" + BLEManager.getBLEObj().scanDevice());
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().scanDevice()：" + BLEManager.getInstance().scanDevice());
             }
         });
         findViewById(R.id.open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().openBLE()：" + BLEManager.getBLEObj().openBLE());
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().openBLE()：" + BLEManager.getInstance().openBLE());
             }
         });
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().closeBLE()：" + BLEManager.getBLEObj().closeBLE());
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().closeBLE()：" + BLEManager.getInstance().closeBLE());
             }
         });
         findViewById(R.id.stopScan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d(getClass().getSimpleName(), "BLEManager.getBLEObj().stopScan()：" + BLEManager.getBLEObj().stopScan());
+                LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().stopScan()：" + BLEManager.getInstance().stopScan());
             }
         });
         EditText input = findViewById(R.id.txt);
@@ -108,7 +118,7 @@ public class BLEActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(text)) {
                     return;
                 }
-                BLEManager.getBLEObj().sendData(text);
+                BLEManager.getInstance().sendData(text);
             }
         });
 
@@ -116,7 +126,7 @@ public class BLEActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //设置服务端--外部连接监听
-                BLEManager.getBLEObj().receive(UUID);
+                BLEManager.getInstance().receive(UUID);
             }
         });
 
@@ -124,14 +134,14 @@ public class BLEActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //断开服务端
-                BLEManager.getBLEObj().disReceive();
+                BLEManager.getInstance().disReceive();
             }
         });
         findViewById(R.id.disconnect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //断开客户端
-                BLEManager.getBLEObj().disConnect();
+                BLEManager.getInstance().disConnect();
             }
         });
     }
@@ -139,8 +149,8 @@ public class BLEActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         ble.removeOnClickEvent();
-        BLEManager.getBLEObj().removeResultListener(scanResultListener);
-        BLEManager.getBLEObj().releaseAll();
+        BLEManager.getInstance().removeResultListener(scanResultListener);
+        BLEManager.getInstance().releaseAll();
         super.onDestroy();
     }
 }

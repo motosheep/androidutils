@@ -1,4 +1,4 @@
-package com.north.light.libble.listener;
+package com.north.light.libble.listener.inner;
 
 /**
  * author:li

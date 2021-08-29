@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import android.text.TextUtils;
 
 import com.north.light.libble.bean.BLEInfo;
-import com.north.light.libble.listener.BLEDataListener;
+import com.north.light.libble.listener.inner.BLEDataListener;
 import com.north.light.libble.thread.BLEThreadManager;
 import com.north.light.libble.utils.BLELog;
 
@@ -52,13 +52,22 @@ public class BLEConnectManager {
     private final long TIME_CLIENT_RECONNECT = 1200;
     private static boolean mServerAutoAccept = false;
     private final long TIME_SERVER_ACCEPT = 1200;
+    //是否释放中的标识
+    private static volatile boolean isReleaseClient = false;
+    private static volatile boolean isReleaseServer = false;
 
     public void clientAutoConnect(boolean auto) {
         mClientAutoConnect = auto;
+        if (!auto) {
+            BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoConnectClientRunnable);
+        }
     }
 
     public void serverAutoAccept(boolean auto) {
         mServerAutoAccept = auto;
+        if (!auto) {
+            BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoServerAccept);
+        }
     }
 
     private static class SingleHolder {
@@ -108,6 +117,10 @@ public class BLEConnectManager {
                 mIsConnectRemote = false;
                 notifyStatus(3);
                 if (mClientAutoConnect) {
+                    if (isReleaseClient) {
+                        isReleaseClient = false;
+                        return;
+                    }
                     BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoConnectClientRunnable);
                     BLEThreadManager.getInstance().getHandler().postDelayed(mAutoConnectClientRunnable, TIME_CLIENT_RECONNECT);
                 }
@@ -177,7 +190,11 @@ public class BLEConnectManager {
                 e.printStackTrace();
                 releaseReceive();
                 notifyStatus(6);
-                if(mServerAutoAccept){
+                if (mServerAutoAccept) {
+                    if (isReleaseServer) {
+                        isReleaseServer = false;
+                        return;
+                    }
                     BLEThreadManager.getInstance().getHandler().removeCallbacks(mAutoServerAccept);
                     BLEThreadManager.getInstance().getHandler().postDelayed(mAutoServerAccept, TIME_SERVER_ACCEPT);
                 }
@@ -239,10 +256,17 @@ public class BLEConnectManager {
     }
 
     public void releaseAll() {
+        isReleaseClient = true;
+        isReleaseServer = true;
         disReceive();
         disconnect();
-        clientAutoConnect(false);
-        serverAutoAccept(false);
+        releaseRetryHandler();
+    }
+
+    /**
+     * 停止自动重连
+     */
+    public void releaseRetryHandler() {
         BLEThreadManager.getInstance().releaseHandler();
     }
 

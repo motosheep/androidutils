@@ -2,11 +2,13 @@ package com.north.light.libble.model;
 
 import android.bluetooth.BluetoothAdapter;
 
-import com.north.light.libble.api.BLEModelApi;
 import com.north.light.libble.bean.BLEInfo;
-import com.north.light.libble.listener.BLEBroadcastListener;
-import com.north.light.libble.listener.BLEDataListener;
+import com.north.light.libble.listener.BLEDataBackListener;
 import com.north.light.libble.listener.BLEScanResultListener;
+import com.north.light.libble.listener.BLEStatusListener;
+import com.north.light.libble.listener.inner.BLEBroadcastListener;
+import com.north.light.libble.listener.inner.BLEDataListener;
+import com.north.light.libble.model.api.BLEModelApi;
 import com.north.light.libble.receiver.BLEBroadcastReceiver;
 import com.north.light.libble.utils.BLELog;
 
@@ -16,20 +18,27 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * author:li
  * date:2021/8/26
- * desc:蓝牙功能集成类
+ * desc:蓝牙功能集成类--基础方法
  */
 public class BLEImpl implements BLEModelApi {
     public final String TAG = BLEImpl.class.getSimpleName();
     /**
-     * 监听集合
+     * 结果监听集合
      */
-    private CopyOnWriteArrayList<BLEScanResultListener> mListener = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<BLEScanResultListener> mResultListener = new CopyOnWriteArrayList<>();
+    /**
+     * 状态监听集合
+     */
+    private CopyOnWriteArrayList<BLEStatusListener> mStatusListener = new CopyOnWriteArrayList<>();
+    /**
+     * 数据监听集合
+     */
+    private CopyOnWriteArrayList<BLEDataBackListener> mDataListener = new CopyOnWriteArrayList<>();
 
 
     public BLEImpl() {
         BLELog.d(TAG, "BLEImpl 构造函数");
     }
-
 
     /**
      * 初始化--全局只能调用一次
@@ -57,26 +66,41 @@ public class BLEImpl implements BLEModelApi {
         @Override
         public void sendCallBack(boolean success, String data) {
             BLELog.d(TAG, "sendCallBack success: " + success + "\tdata: " + data);
+            for (BLEDataBackListener listener : mDataListener) {
+                listener.sendCallBack(success, data);
+            }
         }
 
         @Override
         public void receiveCallBack(String data) {
             BLELog.d(TAG, "receiveCallBack: " + data);
+            for (BLEDataBackListener listener : mDataListener) {
+                listener.receiveCallBack(data);
+            }
         }
 
         @Override
         public void connecting() {
             BLELog.d(TAG, "connecting");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.connecting();
+            }
         }
 
         @Override
         public void connectSuccess() {
             BLELog.d(TAG, "connectSuccess");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.connectSuccess();
+            }
         }
 
         @Override
         public void connectFailed() {
             BLELog.d(TAG, "connectFailed");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.connectFailed();
+            }
         }
 
         @Override
@@ -102,17 +126,23 @@ public class BLEImpl implements BLEModelApi {
         @Override
         public void startDiscovery() {
             BLELog.d(TAG, "startDiscovery");
+            for (BLEScanResultListener listener : mResultListener) {
+                listener.startScan();
+            }
         }
 
         @Override
         public void stopDiscovery() {
             BLELog.d(TAG, "stopDiscovery");
+            for (BLEScanResultListener listener : mResultListener) {
+                listener.stopScan();
+            }
         }
 
         @Override
         public void discoveryDevice(List<BLEInfo> deviceList) {
             BLELog.d(TAG, "discoveryDevice");
-            for (BLEScanResultListener listener : mListener) {
+            for (BLEScanResultListener listener : mResultListener) {
                 listener.result(deviceList);
             }
         }
@@ -120,21 +150,33 @@ public class BLEImpl implements BLEModelApi {
         @Override
         public void opening() {
             BLELog.d(TAG, "opening");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.opening();
+            }
         }
 
         @Override
         public void opened() {
             BLELog.d(TAG, "opened");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.opened();
+            }
         }
 
         @Override
         public void closing() {
             BLELog.d(TAG, "closing");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.closing();
+            }
         }
 
         @Override
         public void closed() {
             BLELog.d(TAG, "closed");
+            for (BLEStatusListener listener : mStatusListener) {
+                listener.closed();
+            }
         }
 
         @Override
@@ -172,6 +214,8 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public boolean scanDevice() {
         try {
+            //取消重连机制
+            BLEConnectManager.getInstance().releaseRetryHandler();
             BluetoothAdapter adapter = BLEObjProvider.getInstance().getBluetoothAdapter();
             adapter.cancelDiscovery();
             return adapter.startDiscovery();
@@ -184,6 +228,8 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public boolean stopScan() {
         try {
+            //取消重连机制
+            BLEConnectManager.getInstance().releaseRetryHandler();
             return BLEObjProvider.getInstance().getBluetoothAdapter().cancelDiscovery();
         } catch (Exception e) {
             BLELog.d(TAG + "stopScan error:", e.getMessage());
@@ -204,6 +250,8 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public boolean openBLE() {
         try {
+            //取消重连机制
+            BLEConnectManager.getInstance().releaseRetryHandler();
             return BLEObjProvider.getInstance().getBluetoothAdapter().enable();
         } catch (Exception e) {
             BLELog.d(TAG + "open error:", e.getMessage());
@@ -214,6 +262,8 @@ public class BLEImpl implements BLEModelApi {
     @Override
     public boolean closeBLE() {
         try {
+            //取消重连机制
+            BLEConnectManager.getInstance().releaseRetryHandler();
             return BLEObjProvider.getInstance().getBluetoothAdapter().disable();
         } catch (Exception e) {
             BLELog.d(TAG + "close error:", e.getMessage());
@@ -223,12 +273,32 @@ public class BLEImpl implements BLEModelApi {
 
     @Override
     public void setOnResultListener(BLEScanResultListener listener) {
-        mListener.add(listener);
+        mResultListener.add(listener);
     }
 
     @Override
     public void removeResultListener(BLEScanResultListener listener) {
-        mListener.remove(listener);
+        mResultListener.remove(listener);
+    }
+
+    @Override
+    public void setOnStatusListener(BLEStatusListener listener) {
+        mStatusListener.add(listener);
+    }
+
+    @Override
+    public void removeOnStatusListener(BLEStatusListener listener) {
+        mStatusListener.remove(listener);
+    }
+
+    @Override
+    public void setOnDataListener(BLEDataBackListener listener) {
+        mDataListener.add(listener);
+    }
+
+    @Override
+    public void removeOnDataListener(BLEDataBackListener listener) {
+        mDataListener.remove(listener);
     }
 
 

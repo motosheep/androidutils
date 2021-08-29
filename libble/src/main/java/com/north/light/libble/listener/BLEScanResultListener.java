@@ -1,7 +1,5 @@
 package com.north.light.libble.listener;
 
-import android.bluetooth.BluetoothDevice;
-
 import com.north.light.libble.bean.BLEInfo;
 
 import java.util.List;
@@ -22,4 +20,15 @@ public interface BLEScanResultListener {
      * 错误
      */
     void error(String tips);
+
+    /**
+     * 开始扫描
+     */
+    void startScan();
+
+    /**
+     * 停止扫描
+     */
+    void stopScan();
+
 }

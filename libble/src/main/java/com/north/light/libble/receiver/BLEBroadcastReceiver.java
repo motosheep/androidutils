@@ -9,7 +9,7 @@ import android.content.IntentFilter;
 
 import com.north.light.libble.bean.BLEInfo;
 import com.north.light.libble.content.BLEContext;
-import com.north.light.libble.listener.BLEBroadcastListener;
+import com.north.light.libble.listener.inner.BLEBroadcastListener;
 import com.north.light.libble.utils.BLELog;
 
 import java.util.ArrayList;
