@@ -81,15 +81,13 @@ public class BLENormalImpl extends BLEImpl {
 
     @Override
     public void sendData(String data) {
-        if(isRelease){
+        if (isRelease) {
             isRelease = false;
             releaseNormalHandler();
             mDataHandler.sendEmptyMessageDelayed(TYPE_CHECK, 200);
         }
-        for (int i = 1; i <= 10; i++) {
-            mDataList.add(mDataList.size(), data + i);
-        }
-        BLELog.d(TAG,"发送数据");
+        mDataList.add(mDataList.size(), data);
+        BLELog.d(TAG, "发送数据:" + data);
     }
 
     private BLEDataBackListener dataBackListener = new BLEDataBackListener() {
