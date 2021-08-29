@@ -217,7 +217,10 @@ public class BLEConnectManager {
      * 发送数据
      */
     public void sendData(String data) {
-        if (TextUtils.isEmpty(data)) {
+        if (!mIsConnectRemote) {
+            for (BLEDataListener listener : mListener) {
+                listener.sendCallBack(false, data);
+            }
             return;
         }
         BLEThreadManager.getInstance().getCachePool().execute(new Runnable() {

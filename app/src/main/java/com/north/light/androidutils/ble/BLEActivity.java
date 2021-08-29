@@ -24,7 +24,7 @@ public class BLEActivity extends AppCompatActivity {
     //蓝牙设备集合
     private List<BLEInfo> infoList = new ArrayList<>();
     private String UUID = "00001115ab-0000-1000-8000-00805f9B34FB";
-    private BLEStringRecyclerView ble;
+    private BLEStringRecyclerView mBleStringContentRecyclerview;
 
     /**
      * 蓝牙扫描结果
@@ -36,7 +36,7 @@ public class BLEActivity extends AppCompatActivity {
             for (BLEInfo b : result) {
                 r.add(b.getDevice().getAddress());
             }
-            ble.initData(r);
+            mBleStringContentRecyclerview.initData(r);
             infoList.addAll(result);
         }
 
@@ -60,9 +60,9 @@ public class BLEActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
-        ble = findViewById(R.id.activity_ble_content);
+        mBleStringContentRecyclerview = findViewById(R.id.activity_ble_content);
         BLEManager.getInstance().setOnResultListener(scanResultListener);
-        ble.setOnClickEvent(new BLEStringRecyclerView.OnClickEvent() {
+        mBleStringContentRecyclerview.setOnClickEvent(new BLEStringRecyclerView.OnClickEvent() {
             @Override
             public void click(String data) {
                 //连接蓝牙
@@ -88,7 +88,7 @@ public class BLEActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 infoList.clear();
-                ble.resetData();
+                mBleStringContentRecyclerview.resetData();
                 LogUtil.d(getClass().getSimpleName(), "BLEManager.getInstance().scanDevice()：" + BLEManager.getInstance().scanDevice());
             }
         });
@@ -148,7 +148,7 @@ public class BLEActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        ble.removeOnClickEvent();
+        mBleStringContentRecyclerview.removeOnClickEvent();
         BLEManager.getInstance().removeResultListener(scanResultListener);
         BLEManager.getInstance().releaseAll();
         super.onDestroy();
