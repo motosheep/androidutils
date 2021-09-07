@@ -93,6 +93,7 @@ public class MulInputView extends FrameLayout {
         if (mTxLayout != null) {
             mTxLayout.removeAllViews();
         }
+        mTxList.clear();
         //设置textview
         for (int i = 0; i < mInputCount; i++) {
             TextView tv = new TextView(getContext());
