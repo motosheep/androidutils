@@ -16,6 +16,7 @@ import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLay
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
 import com.north.light.androidutils.dagger.DaggerActivity;
 import com.north.light.androidutils.drawer.DrawerActivity;
+import com.north.light.androidutils.location.LocationActivity;
 import com.north.light.androidutils.network.NetStatusActivity;
 import com.north.light.androidutils.novel.NovelActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
@@ -122,7 +123,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        findViewById(R.id.activity_main_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }

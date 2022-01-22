@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.north.light.androidutils.activitycounter.ActivityCounter;
 import com.north.light.androidutils.audio.focus.AudioFocusManager;
+import com.north.light.androidutils.location.main.LocManager;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -29,5 +30,6 @@ public class MainApplication extends Application {
         mContext = this;
         AudioFocusManager.getInstance().init(this);
         ActivityCounter.getInstance().init(this);
+        LocManager.getInstance().getLocation().init(this);
     }
 }

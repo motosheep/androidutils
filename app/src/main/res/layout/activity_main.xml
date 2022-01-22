@@ -82,6 +82,12 @@
             android:layout_height="wrap_content"
             android:text="ble" />
 
+        <Button
+            android:id="@+id/activity_main_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="location-原生" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
