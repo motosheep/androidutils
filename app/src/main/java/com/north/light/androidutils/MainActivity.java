@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.north.light.androidutils.audio.ui.AudioActivity;
 import com.north.light.androidutils.ble.BLEActivity;
 import com.north.light.androidutils.brand.BrandUtils;
+import com.north.light.androidutils.canvas.CanvasActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorCollapsingActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLayoutActivity;
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
@@ -127,6 +128,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_canvas).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CanvasActivity.class);
                 startActivity(intent);
             }
         });
