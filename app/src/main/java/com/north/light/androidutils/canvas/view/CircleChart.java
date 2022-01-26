@@ -1,4 +1,4 @@
-package com.north.light.androidutils.canvas;
+package com.north.light.androidutils.canvas.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

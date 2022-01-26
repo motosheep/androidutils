@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
-    <com.north.light.androidutils.canvas.CircleChart
-        android:id="@+id/activity_canvas_linear"
-        android:layout_width="300dp"
-        android:layout_height="300dp" />
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <com.north.light.androidutils.canvas.view.CircleChart
+            android:id="@+id/activity_canvas_circle"
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
+
+        <com.north.light.androidutils.canvas.view.LinearChart
+            android:id="@+id/activity_canvas_linear"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
