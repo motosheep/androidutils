@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * @Author: lzt
@@ -14,6 +15,8 @@ import java.io.Serializable;
  * @Description:图片压缩
  */
 public class ImgCompressUtils implements Serializable {
+    private final String MAP_WIDTH = "MAP_WIDTH";
+    private final String MAP_HEIGHT = "MAP_HEIGHT";
 
     private static class SingleHolder implements Serializable {
         static ImgCompressUtils mInstance = new ImgCompressUtils();
@@ -24,6 +27,32 @@ public class ImgCompressUtils implements Serializable {
     }
 
     //内部方法---------------------------------------------------------------------------------------
+
+    /**
+     * 获取数据源的宽高
+     */
+    private <T> HashMap<String, Integer> getSourceWH(Context context, T t) throws Exception {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        int orgWidth = 0;
+        int orgHeight = 0;
+        if (t instanceof Bitmap) {
+            orgWidth = ((Bitmap) t).getWidth();
+            orgHeight = ((Bitmap) t).getHeight();
+        } else if (t instanceof Integer) {
+            BitmapFactory.decodeResource(context.getApplicationContext().getResources(), (Integer) t, options);
+            orgWidth = options.outWidth;
+            orgHeight = options.outHeight;
+        } else if (t instanceof String) {
+            BitmapFactory.decodeFile((String) t, options);
+            orgWidth = options.outWidth;
+            orgHeight = options.outHeight;
+        }
+        HashMap<String, Integer> map = new HashMap();
+        map.put(MAP_HEIGHT, orgHeight);
+        map.put(MAP_WIDTH, orgWidth);
+        return map;
+    }
 
     /**
      * 图片压缩--通用内部调用函数
@@ -41,6 +70,9 @@ public class ImgCompressUtils implements Serializable {
         fos.flush();
         fos.close();
         out.close();
+        if (!source.isRecycled()) {
+            source.recycle();
+        }
         return path;
     }
 
@@ -75,29 +107,15 @@ public class ImgCompressUtils implements Serializable {
             throw new Exception("not support type");
         }
         //至此，是需要处理剪裁的--------------------------------
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        int orgWidth = 0;
-        int orgHeight = 0;
-        if (t instanceof Bitmap) {
-            orgWidth = ((Bitmap) t).getWidth();
-            orgHeight = ((Bitmap) t).getHeight();
-        } else if (t instanceof Integer) {
-            BitmapFactory.decodeResource(context.getApplicationContext().getResources(), (Integer) t, options);
-            orgWidth = options.outWidth;
-            orgHeight = options.outHeight;
-        } else if (t instanceof String) {
-            BitmapFactory.decodeFile((String) t, options);
-            orgWidth = options.outWidth;
-            orgHeight = options.outHeight;
-        }
-        if (orgHeight == 0 || orgWidth == 0) {
+        HashMap<String, Integer> whMap = getSourceWH(context, t);
+        Integer orgWidth = whMap.get(MAP_WIDTH);
+        Integer orgHeight = whMap.get(MAP_HEIGHT);
+        if (orgWidth == null || orgHeight == null || orgHeight == 0 || orgWidth == 0) {
             //参数不符合
             throw new Exception("params error");
         }
         //压缩后返回一个bitmap--------
-        Bitmap result = scaleBitmap(context, t, width, height);
-        return result;
+        return scaleBitmap(context, t, width, height);
     }
 
     /**
@@ -160,6 +178,29 @@ public class ImgCompressUtils implements Serializable {
             return scaleBitmap(context, t, width, height);
         }
     }
+
+//    private int computeSize(int srcWidth, int srcHeight) {
+//        srcWidth = srcWidth % 2 == 1 ? srcWidth + 1 : srcWidth;
+//        srcHeight = srcHeight % 2 == 1 ? srcHeight + 1 : srcHeight;
+//        int longSide = Math.max(srcWidth, srcHeight);
+//        int shortSide = Math.min(srcWidth, srcHeight);
+//        float scale = ((float) shortSide / longSide);
+//        if (scale <= 1 && scale > 0.5625) {
+//            if (longSide < 1664) {
+//                return 1;
+//            } else if (longSide < 4990) {
+//                return 2;
+//            } else if (longSide > 4990 && longSide < 10240) {
+//                return 4;
+//            } else {
+//                return longSide / 1280 == 0 ? 1 : longSide / 1280;
+//            }
+//        } else if (scale <= 0.5625 && scale > 0.5) {
+//            return longSide / 1280 == 0 ? 1 : longSide / 1280;
+//        } else {
+//            return (int) Math.ceil(longSide / (1280.0 / scale));
+//        }
+//    }
 
 
     //外部调用---------------------------------------------------------------------------------------
