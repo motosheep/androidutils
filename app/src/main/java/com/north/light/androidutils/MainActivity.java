@@ -23,6 +23,7 @@ import com.north.light.androidutils.novel.NovelActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDkSmartActivity;
+import com.north.light.androidutils.water.WaterActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -135,6 +136,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CanvasActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_water).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, WaterActivity.class);
                 startActivity(intent);
             }
         });

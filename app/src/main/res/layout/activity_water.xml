@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|top"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+
+        <ImageView
+            android:id="@+id/activity_water_source"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:src="@mipmap/water_pic" />
+
+
+        <RadioGroup
+            android:id="@+id/activity_water_rg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/activity_water_topleft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="左上角" />
+
+            <RadioButton
+                android:id="@+id/activity_water_topright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="右上角" />
+
+            <RadioButton
+                android:id="@+id/activity_water_btleft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="左下角" />
+
+            <RadioButton
+                android:id="@+id/activity_water_btRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="右下角" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/activity_water_target"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp" />
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

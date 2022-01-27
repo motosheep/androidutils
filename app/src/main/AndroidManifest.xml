@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".water.WaterActivity"
+            android:exported="false" />
+        <activity
             android:name=".canvas.CanvasActivity"
             android:exported="false" />
         <activity
