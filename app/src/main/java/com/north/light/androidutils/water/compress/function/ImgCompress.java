@@ -1,28 +1,35 @@
-package com.north.light.androidutils.water;
+package com.north.light.androidutils.water.compress.function;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+
+import com.north.light.androidutils.water.compress.main.Compress;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Author: lzt
  * @Date: 2022/1/27 8:59
  * @Description:图片压缩
  */
-public class ImgCompressUtils implements Serializable {
+public class ImgCompress implements Serializable {
     private final String MAP_WIDTH = "MAP_WIDTH";
     private final String MAP_HEIGHT = "MAP_HEIGHT";
 
     private static class SingleHolder implements Serializable {
-        static ImgCompressUtils mInstance = new ImgCompressUtils();
+        static ImgCompress mInstance = new ImgCompress();
     }
 
-    public static ImgCompressUtils getInstance() {
+    public static ImgCompress getInstance() {
         return SingleHolder.mInstance;
     }
 
@@ -57,15 +64,20 @@ public class ImgCompressUtils implements Serializable {
     /**
      * 图片压缩--通用内部调用函数
      */
-    private String qualityMain(Context context, Bitmap source) throws Exception {
+    private String qualityMain(Context context, Bitmap source, int percent, String root) throws Exception {
         //质量压缩
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        source.compress(Bitmap.CompressFormat.JPEG, 50, out);
-        String rootPath = context.getApplicationContext().getExternalCacheDir().getPath();
+        source.compress(Bitmap.CompressFormat.JPEG, percent, out);
+        String rootPath;
+        if (!TextUtils.isEmpty(root)) {
+            rootPath = root;
+        } else {
+            rootPath = ImgConstant.getDefaultOutputPath(context.getApplicationContext());
+        }
         //写入文件
         String fileName = System.currentTimeMillis() + ".jpg";
-        String path = rootPath + "/" + fileName;
-        FileOutputStream fos = new FileOutputStream(path);
+        String finalPath = rootPath + "/" + fileName;
+        FileOutputStream fos = new FileOutputStream(finalPath);
         fos.write(out.toByteArray());
         fos.flush();
         fos.close();
@@ -73,7 +85,7 @@ public class ImgCompressUtils implements Serializable {
         if (!source.isRecycled()) {
             source.recycle();
         }
-        return path;
+        return finalPath;
     }
 
     /**
@@ -163,7 +175,13 @@ public class ImgCompressUtils implements Serializable {
             targetOptions.inSampleSize = rate;
             Bitmap trainBitmap;
             if (t instanceof Bitmap) {
-                trainBitmap = (Bitmap) t;
+                Bitmap cacheBitmap = (Bitmap) t;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                cacheBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                trainBitmap = ImgTrainUtils.getPicFromBytes(baos.toByteArray(), targetOptions);
+                if (!cacheBitmap.isRecycled()) {
+                    cacheBitmap.recycle();
+                }
             } else if (t instanceof Integer) {
                 trainBitmap = BitmapFactory.decodeResource(context.getApplicationContext().getResources(), (Integer) t, targetOptions);
             } else {
@@ -179,81 +197,41 @@ public class ImgCompressUtils implements Serializable {
         }
     }
 
-//    private int computeSize(int srcWidth, int srcHeight) {
-//        srcWidth = srcWidth % 2 == 1 ? srcWidth + 1 : srcWidth;
-//        srcHeight = srcHeight % 2 == 1 ? srcHeight + 1 : srcHeight;
-//        int longSide = Math.max(srcWidth, srcHeight);
-//        int shortSide = Math.min(srcWidth, srcHeight);
-//        float scale = ((float) shortSide / longSide);
-//        if (scale <= 1 && scale > 0.5625) {
-//            if (longSide < 1664) {
-//                return 1;
-//            } else if (longSide < 4990) {
-//                return 2;
-//            } else if (longSide > 4990 && longSide < 10240) {
-//                return 4;
-//            } else {
-//                return longSide / 1280 == 0 ? 1 : longSide / 1280;
-//            }
-//        } else if (scale <= 0.5625 && scale > 0.5) {
-//            return longSide / 1280 == 0 ? 1 : longSide / 1280;
-//        } else {
-//            return (int) Math.ceil(longSide / (1280.0 / scale));
-//        }
-//    }
-
-
     //外部调用---------------------------------------------------------------------------------------
-    /**
-     * 备注：
-     * Bitmap.compress方法确实可以压缩图片，但压缩的是存储大小，即你放到disk上的大小
-     * 但是其内存占用是没有变化的
-     * */
 
     /**
-     * 图片压缩--路径
+     * 传入builder并开始压缩
      */
-    public String compress(Context context, String picPath) throws Exception {
-        return compress(context, picPath, 0, 0);
-    }
-
-    /**
-     * 图片压缩--路径
-     */
-    public String compress(Context context, String picPath, int width, int height) throws Exception {
-        //判断是否需要剪裁压缩--指定大小
-        Bitmap scaleBitmap = checkSrcAndScale(context, picPath, width, height);
-        return qualityMain(context, scaleBitmap);
-    }
-
-    /**
-     * 图片压缩--res id
-     */
-    public String compress(Context context, Integer resId) throws Exception {
-        return compress(context, resId, 0, 0);
-    }
-
-    /**
-     * 图片压缩--res id
-     */
-    public String compress(Context context, Integer resId, int width, int height) throws Exception {
-        Bitmap scaleBitmap = checkSrcAndScale(context, resId, width, height);
-        return qualityMain(context, scaleBitmap);
+    public List<String> compress(Compress.Builder builder) throws Exception {
+        List<PicStreamProvider> adapters = builder.getStreamProviderList();
+        if (adapters == null || adapters.size() == 0) {
+            return new ArrayList<>();
+        }
+        //开始压缩
+        List<String> result = new ArrayList<>();
+        for (PicStreamProvider provider : adapters) {
+            InputStream inputStream = provider.getStream();
+            Bitmap bitmap = ImgTrainUtils.getPicFromBytes(ImgTrainUtils.readStream(inputStream), null);
+            int width = provider.width();
+            int height = provider.height();
+            int rate = provider.qualityRate();
+            String outputPath = provider.outputPath();
+            if (width < 0 || height < 0 || rate < 0) {
+                return new ArrayList<>();
+            }
+            String compressPath = compress(builder.getContext(), bitmap, width, height, rate, outputPath);
+            result.add(compressPath);
+            provider.close();
+        }
+        return result;
     }
 
     /**
      * 图片压缩--bitmap
      */
-    public String compress(Context context, Bitmap bitmap) throws Exception {
-        return compress(context, bitmap, 0, 0);
-    }
-
-    /**
-     * 图片压缩--bitmap
-     */
-    public String compress(Context context, Bitmap bitmap, int width, int height) throws Exception {
+    private String compress(Context context, Bitmap bitmap, int width, int height, int percent, String path) throws Exception {
         Bitmap scaleBitmap = checkSrcAndScale(context, bitmap, width, height);
-        return qualityMain(context, scaleBitmap);
+        return qualityMain(context, scaleBitmap, percent, path);
     }
 
 

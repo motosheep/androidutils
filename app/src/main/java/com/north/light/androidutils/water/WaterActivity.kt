@@ -7,6 +7,8 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.north.light.androidutils.R
+import com.north.light.androidutils.water.compress.main.Compress
+import java.io.File
 
 /**
  * 水印activity
@@ -29,8 +31,13 @@ class WaterActivity : AppCompatActivity() {
         mRbTR = findViewById(R.id.activity_water_topright)
         mRbBL = findViewById(R.id.activity_water_btleft)
         mRbBR = findViewById(R.id.activity_water_btRight)
-        val path = ImgCompressUtils.getInstance()
-            .compress(this, Environment.getExternalStorageDirectory().path + "/000.jpg", 0, 0)
+
+        //处理
+        val path = Environment.getExternalStorageDirectory().path + "/000.jpg"
+        val result = Compress.Builder().with(this).load(path).launch()
+
+//        val path = ImgCompress.getInstance()
+//            .compress(this, , 0, 0)
 //        val path = ImgUtils.getInstance()
 //            .saveBitmap(this, bitmap, Environment.getExternalStorageDirectory().path+"/aaa11-2.jpg")
         //event------------------------------------------------------------
