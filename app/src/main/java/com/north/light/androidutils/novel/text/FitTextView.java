@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import com.north.light.androidutils.R;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: lzt
@@ -46,6 +45,8 @@ public class FitTextView extends View {
     private int padBottom;
     //监听
     private FitTextListener mListener;
+    //剩余宽度填充
+    private int mRestWidth = 0;
 
     public FitTextView(Context context) {
         super(context);
@@ -118,7 +119,6 @@ public class FitTextView extends View {
         int padLeftCache = padLeft;
         int padTopCache = padTop;
         int fontCacheHeight = mFontHeight;
-        int widthCacheInterval = mWidthInterval;
         //中间变量------------------
         int rowCount = 1;
         if (length > widthCacheSize) {
@@ -128,22 +128,18 @@ public class FitTextView extends View {
         //文字分割为单个字符数据
         List<String> contentList = FitTextListSpilt.splitStr(mContent);
         List<List<String>> colList = FitTextListSpilt.splitList(contentList, widthCacheSize);
-        try {
-            for (int row = 0; row < rowCount; row++) {
-                //列
-                if (row < heightCacheSize) {
-                    //在绘制范围内
-                    int colSize = colList.get(row).size();
-                    for (int col = 0; col < colSize; col++) {
-                        String content = colList.get(row).get(col);
-                        int startX = col * fontCacheWidth + fontCacheWidth / 2 + padLeftCache + widthCacheInterval / 2;
-                        int startY = (row + 1) * fontCacheHeight + padTopCache;
-                        canvas.drawText(content, startX, startY, mTextPaint);
-                    }
+        for (int row = 0; row < rowCount; row++) {
+            //列
+            if (row < heightCacheSize && row < colList.size()) {
+                //在绘制范围内
+                int colSize = colList.get(row).size();
+                for (int col = 0; col < colSize; col++) {
+                    String content = colList.get(row).get(col);
+                    int startX = col * fontCacheWidth + fontCacheWidth / 2 + padLeftCache + mRestWidth / 2;
+                    int startY = (row + 1) * fontCacheHeight + padTopCache;
+                    canvas.drawText(content, startX, startY, mTextPaint);
                 }
             }
-        }catch (Exception e){
-
         }
         canvas.restore();
     }
@@ -199,6 +195,7 @@ public class FitTextView extends View {
                 int measureWidth = getMeasuredWidth() - padLeft - padRight;
                 int measureHeight = getMeasuredHeight() - padTop - padBottom;
                 mWidthSize = measureWidth / mFontWidth;
+                mRestWidth = measureWidth % mFontWidth;
                 mHeightSize = measureHeight / mFontHeight;
                 if (mListener != null) {
                     mListener.drawCount(mWidthSize * mHeightSize);
