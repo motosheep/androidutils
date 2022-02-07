@@ -119,6 +119,7 @@ public class FitTextView extends View {
         int padLeftCache = padLeft;
         int padTopCache = padTop;
         int fontCacheHeight = mFontHeight;
+        int heightCacheInterval = mHeightInterval;
         //中间变量------------------
         int rowCount = 1;
         if (length > widthCacheSize) {
@@ -136,7 +137,7 @@ public class FitTextView extends View {
                 for (int col = 0; col < colSize; col++) {
                     String content = colList.get(row).get(col);
                     int startX = col * fontCacheWidth + fontCacheWidth / 2 + padLeftCache + mRestWidth / 2;
-                    int startY = (row + 1) * fontCacheHeight + padTopCache;
+                    int startY = (row + 1) * fontCacheHeight + padTopCache - (heightCacheInterval/2);
                     canvas.drawText(content, startX, startY, mTextPaint);
                 }
             }
