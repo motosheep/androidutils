@@ -2,18 +2,20 @@ package com.north.light.androidutils.water
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.north.light.androidutils.R
-import com.north.light.androidutils.water.compress.main.Compress
-import java.io.File
+import com.north.light.androidutils.water.compress.Compress
 
 /**
  * 水印activity
  * */
 class WaterActivity : AppCompatActivity() {
+    private val TAG = WaterActivity::class.java.simpleName
+
     //模板imageview
     private lateinit var mTargetImg: ImageView
     private lateinit var mRg: RadioGroup
@@ -33,9 +35,9 @@ class WaterActivity : AppCompatActivity() {
         mRbBR = findViewById(R.id.activity_water_btRight)
 
         //处理
-        val path = Environment.getExternalStorageDirectory().path + "/000.jpg"
+        val path = Environment.getExternalStorageDirectory().path + "/001.jpg"
         val result = Compress.Builder().with(this).load(path).launch()
-
+        Log.d(TAG, "压缩路径:$result")
 //        val path = ImgCompress.getInstance()
 //            .compress(this, , 0, 0)
 //        val path = ImgUtils.getInstance()

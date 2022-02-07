@@ -1,4 +1,4 @@
-package com.north.light.androidutils.water.compress.main;
+package com.north.light.androidutils.water.compress;
 
 import android.content.Context;
 import android.text.TextUtils;

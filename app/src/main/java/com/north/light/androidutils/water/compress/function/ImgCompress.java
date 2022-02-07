@@ -5,10 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
-import com.north.light.androidutils.water.compress.main.Compress;
+import com.north.light.androidutils.water.compress.Compress;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -197,6 +196,16 @@ public class ImgCompress implements Serializable {
         }
     }
 
+
+    /**
+     * 图片压缩--bitmap
+     */
+    private String compress(Context context, Bitmap bitmap, int width, int height, int percent, String path) throws Exception {
+        Bitmap scaleBitmap = checkSrcAndScale(context, bitmap, width, height);
+        return qualityMain(context, scaleBitmap, percent, path);
+    }
+
+
     //外部调用---------------------------------------------------------------------------------------
 
     /**
@@ -211,6 +220,13 @@ public class ImgCompress implements Serializable {
         List<String> result = new ArrayList<>();
         for (PicStreamProvider provider : adapters) {
             InputStream inputStream = provider.getStream();
+            InputStream checkStream = provider.getStream();
+            boolean isJpg = ImgFormatChecker.SINGLE.isJPG(checkStream);
+            if (!isJpg) {
+                //如果不是jpg，则不压缩
+                result.add(provider.outputPath());
+                continue;
+            }
             Bitmap bitmap = ImgTrainUtils.getPicFromBytes(ImgTrainUtils.readStream(inputStream), null);
             int width = provider.width();
             int height = provider.height();
@@ -224,14 +240,6 @@ public class ImgCompress implements Serializable {
             provider.close();
         }
         return result;
-    }
-
-    /**
-     * 图片压缩--bitmap
-     */
-    private String compress(Context context, Bitmap bitmap, int width, int height, int percent, String path) throws Exception {
-        Bitmap scaleBitmap = checkSrcAndScale(context, bitmap, width, height);
-        return qualityMain(context, scaleBitmap, percent, path);
     }
 
 
