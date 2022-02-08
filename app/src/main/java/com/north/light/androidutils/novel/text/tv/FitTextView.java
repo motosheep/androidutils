@@ -1,4 +1,4 @@
-package com.north.light.androidutils.novel.text;
+package com.north.light.androidutils.novel.text.tv;
 
 import android.content.Context;
 import android.graphics.Canvas;
