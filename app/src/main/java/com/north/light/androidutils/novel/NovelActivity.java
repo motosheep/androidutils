@@ -1,10 +1,12 @@
 package com.north.light.androidutils.novel;
 
 import android.os.Bundle;
+import android.os.Environment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.R;
+import com.north.light.androidutils.novel.text.data.TxtIOStreamReader;
 import com.north.light.androidutils.novel.text.read.ReaderView;
 
 import java.util.ArrayList;
@@ -22,6 +24,17 @@ public class NovelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novel);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TxtIOStreamReader reader = new TxtIOStreamReader();
+                try {
+                    reader.load(NovelActivity.this, Environment.getExternalStorageDirectory().getPath()+"/novel.txt");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         readView = findViewById(R.id.activity_novel);
         //设置显示数据
         data.add("从前有座山");
