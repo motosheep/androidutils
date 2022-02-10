@@ -23,7 +23,7 @@ public class NovelActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        TxtManager.getInstance().removeTxtManagerListener();
+        TxtManager.getInstance().removeTxtManagerListener(txtManagerListener);
         super.onDestroy();
     }
 
@@ -36,7 +36,7 @@ public class NovelActivity extends AppCompatActivity {
             @Override
             public void count(int count) {
                 try {
-                    TxtManager.getInstance().loadTxt(NovelActivity.this,
+                    TxtManager.getInstance().loadData(NovelActivity.this,
                             Environment.getExternalStorageDirectory().getPath() + "/novel.txt", count);
                 } catch (Exception e) {
                     e.printStackTrace();

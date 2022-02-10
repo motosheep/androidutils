@@ -16,6 +16,7 @@ import com.north.light.androidutils.novel.text.data.util.TxStringSplitUtils;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -23,12 +24,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @Date: 2022/2/10 9:57
  * @Description:txt管理类
  */
-public class TxtManager implements Serializable {
+public class TxtManager implements TxtManagerApi {
     private StreamReader streamReader;
     //当前文件的path
     private String mCurrentPath;
     private int mPageSize;
-    private TxtManagerListener mListener;
+    private CopyOnWriteArrayList<TxtManagerListener> mListener = new CopyOnWriteArrayList<>();
     //首次读取，初始化相关信息
     private AtomicBoolean mFirstLoad = new AtomicBoolean(true);
     private AtomicBoolean mFirstRead = new AtomicBoolean(true);
@@ -55,8 +56,37 @@ public class TxtManager implements Serializable {
     }
 
     /**
+     * 读取分割文件数据
+     */
+    private void loadSplitFile(TxtInfo info) throws Exception {
+        mIsLoading.set(true);
+        streamReader.read(mContext, info);
+    }
+
+    /**
+     * 通知初始化
+     */
+    private void notifyInit() {
+        for (TxtManagerListener listener : mListener) {
+            listener.init();
+        }
+    }
+
+    /**
+     * 通知自动下一页
+     */
+    private void notifyAutoNext() {
+        for (TxtManagerListener listener : mListener) {
+            listener.autoNext();
+        }
+    }
+
+    //外部调用---------------------------------------------------------------------------------------
+
+    /**
      * init必须调用--application中
      */
+    @Override
     public void init(Context context) {
         this.mContext = context.getApplicationContext();
         streamReader.setOnLoadingListener(new TxtLoadingListener() {
@@ -94,14 +124,10 @@ public class TxtManager implements Serializable {
                 mIsLoading.set(false);
                 if (mFirstRead.get()) {
                     mFirstRead.set(false);
-                    if (mListener != null) {
-                        mListener.init();
-                    }
+                    notifyInit();
                 } else if (mNextRead.get()) {
                     mNextRead.set(false);
-                    if (mListener != null) {
-                        mListener.autoNext();
-                    }
+                    notifyAutoNext();
                 }
             }
 
@@ -113,22 +139,14 @@ public class TxtManager implements Serializable {
         });
     }
 
-    /**
-     * 读取分割文件数据
-     */
-    private void loadSplitFile(TxtInfo info) throws Exception {
-        mIsLoading.set(true);
-        streamReader.read(mContext, info);
-    }
-
-    //外部调用---------------------------------------------------------------------------------------
-    public void loadTxt(Context context, String path, int size) throws Exception {
+    @Override
+    public void loadData(Context context, String path, int pageSize) throws Exception {
         if (TextUtils.isEmpty(path)) {
             return;
         }
         mCurPos = 0;
         mCurrentPath = path;
-        mPageSize = size;
+        mPageSize = pageSize;
         mFirstLoad.set(true);
         mFirstRead.set(true);
         mNextRead.set(false);
@@ -139,6 +157,7 @@ public class TxtManager implements Serializable {
         streamReader.split(context, path);
     }
 
+    @Override
     public void cancel(Context context, String path) throws Exception {
         if (TextUtils.isEmpty(path)) {
             return;
@@ -154,6 +173,7 @@ public class TxtManager implements Serializable {
      *
      * @param type -1上一页 0当前页 1下一页
      */
+    @Override
     public void change(int type) {
         if (mIsLoading.get()) {
             return;
@@ -194,6 +214,7 @@ public class TxtManager implements Serializable {
     /**
      * 获取不同的数据
      */
+    @Override
     public String getShowContent(int type) {
         List<String> data = TxtMemoryManager.getInstance().getCurList();
         if (data == null || data.size() == 0) {
@@ -220,11 +241,20 @@ public class TxtManager implements Serializable {
     }
 
     //监听
+    @Override
     public void setOnTxtManagerListener(TxtManagerListener listener) {
-        mListener = listener;
+        if (listener == null) {
+            return;
+        }
+        mListener.add(listener);
     }
 
-    public void removeTxtManagerListener() {
-        mListener = null;
+    @Override
+    public void removeTxtManagerListener(TxtManagerListener listener) {
+        if (listener == null) {
+            return;
+        }
+        mListener.remove(listener);
     }
+
 }
