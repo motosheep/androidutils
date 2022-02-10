@@ -89,7 +89,7 @@ public class ReaderView extends ReaderBaseView {
     /**
      * 上一页
      */
-    private void prePageData() {
+    public void prePageData() {
         Log.d(TAG, "prePageData");
         if (mListener != null) {
             mListener.change(-1);
@@ -100,10 +100,20 @@ public class ReaderView extends ReaderBaseView {
     /**
      * 下一页
      */
-    private void nextPageData() {
+    public void nextPageData() {
         Log.d(TAG, "nextPageData");
         if (mListener != null) {
             mListener.change(1);
+        }
+        refreshData();
+    }
+
+    /**
+     * 初始化当前页
+     * */
+    public void initCurPage(){
+        if (mListener != null) {
+            mListener.change(0);
         }
         refreshData();
     }

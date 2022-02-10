@@ -1,4 +1,4 @@
-package com.north.light.androidutils.novel.text.data.function;
+package com.north.light.androidutils.novel.text.data.bean;
 
 import java.io.Serializable;
 

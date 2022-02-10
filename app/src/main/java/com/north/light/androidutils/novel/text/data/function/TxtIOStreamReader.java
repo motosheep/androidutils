@@ -3,6 +3,8 @@ package com.north.light.androidutils.novel.text.data.function;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
+import com.north.light.androidutils.novel.text.data.bean.TxtReadInfo;
 import com.north.light.androidutils.novel.text.data.util.TxFileUtils;
 
 import java.io.BufferedReader;
@@ -13,6 +15,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: lzt
@@ -24,6 +27,8 @@ public class TxtIOStreamReader implements StreamReader {
     private final String FORMAT_UTF8 = "utf-8";
 
     private CopyOnWriteArrayList<TxtLoadingListener> mListener = new CopyOnWriteArrayList<>();
+
+    private AtomicBoolean mOut = new AtomicBoolean(false);
 
     //内部方法----------------------------------------------------------------------------------
 
@@ -64,12 +69,12 @@ public class TxtIOStreamReader implements StreamReader {
     /**
      * 通知读取进度
      */
-    private void notifyProgress(String path, String name, int pos, int total) {
+    private void notifyProgress(String path, String name, TxtInfo info) {
         if (mListener == null || mListener.size() == 0) {
             return;
         }
         for (TxtLoadingListener listener : mListener) {
-            listener.loadingPart(path, name, pos, total);
+            listener.splitPart(path, name, info);
         }
     }
 
@@ -81,19 +86,37 @@ public class TxtIOStreamReader implements StreamReader {
             return;
         }
         for (TxtLoadingListener listener : mListener) {
-            listener.loadingFinish(path, name, infoMap);
+            listener.splitFinish(path, name, infoMap);
         }
     }
 
     /**
      * 通知错误
+     *
+     * @param type 1分割错误 2读取错误
      */
-    private void notifyError(Exception e) {
+    private void notifyError(int type, Exception e) {
         if (mListener == null || mListener.size() == 0) {
             return;
         }
         for (TxtLoadingListener listener : mListener) {
-            listener.loadFailed(e);
+            if (type == 1) {
+                listener.splitFailed(e);
+            } else if (type == 2) {
+                listener.readFailed(e);
+            }
+        }
+    }
+
+    /**
+     * 通知读取结果
+     */
+    private void notifyRead(TxtReadInfo info) {
+        if (mListener == null || mListener.size() == 0) {
+            return;
+        }
+        for (TxtLoadingListener listener : mListener) {
+            listener.read(info);
         }
     }
 
@@ -117,7 +140,8 @@ public class TxtIOStreamReader implements StreamReader {
      * 读取文件--先判断是否需要切割，后面再读取
      */
     @Override
-    public void load(Context context, String path) throws Exception {
+    public void split(Context context, String path) throws Exception {
+        mOut.set(false);
         TxtExecutorsManager.getInstance().closeCacheExecutors(path);
         TxtExecutorsManager.getInstance().getCacheExecutors(path).execute(new Runnable() {
             @Override
@@ -145,7 +169,7 @@ public class TxtIOStreamReader implements StreamReader {
                         }
                         String cacheStr;
                         StringBuilder stringBuilder = new StringBuilder();
-                        while ((cacheStr = bre.readLine()) != null) {
+                        while ((cacheStr = bre.readLine()) != null && !mOut.get()) {
                             stringBuilder.append(cacheStr);
                             cacheCount = cacheCount + cacheStr.getBytes().length;
                             if (cacheCount > TxtConstant.SPLIT_SIZE) {
@@ -153,8 +177,9 @@ public class TxtIOStreamReader implements StreamReader {
                                 String fileSplitName = splitParentPath + "/" + fileName;
                                 writerToFile(fileSplitName, stringBuilder.toString());
                                 //通知进度-------------
-                                notifyProgress(splitParentPath, fileSplitName, count, totalCount);
-                                mapInfo.put(count, setMapInfo(count, totalCount, cacheCount, path, fileSplitName));
+                                TxtInfo txInfo = setMapInfo(count, totalCount, cacheCount, path, fileSplitName);
+                                notifyProgress(splitParentPath, fileSplitName, txInfo);
+                                mapInfo.put(count, txInfo);
                                 //同步中间变量----------------------------
                                 count = count + 1;
                                 cacheCount = 0;
@@ -167,20 +192,11 @@ public class TxtIOStreamReader implements StreamReader {
                             String fileSplitName = splitParentPath + "/" + fileName;
                             writerToFile(fileSplitName, stringBuilder.toString());
                             //通知进度-------------
-                            notifyProgress(splitParentPath, fileSplitName, count, totalCount);
-                            mapInfo.put(count, setMapInfo(count, totalCount, cacheCount, path, fileSplitName));
+                            TxtInfo txInfo = setMapInfo(count, totalCount, cacheCount, path, fileSplitName);
+                            notifyProgress(splitParentPath, fileSplitName, txInfo);
+                            mapInfo.put(count, txInfo);
                         }
-                        //至此，全部分割完成,开始读取分割的文件-------------------------------------------------------
-//            List<TxtInfo> strList = new ArrayList<>();
-//            for (int i = 0; i < filePathList.size(); i++) {
-//                File cacheFileName = new File(filePathList.get(i));
-//                int cacheFileSize = (int) cacheFileName.length();
-//                byte[] buff = new byte[cacheFileSize];
-//                FileInputStream cacheInputStream = new FileInputStream(cacheFileName);
-//                cacheInputStream.read(buff, 0, cacheFileSize);
-//                cacheInputStream.close();
-//                String result = new String(buff, FORMAT_UTF8);
-//            }
+                        //至此，全部分割完成------------------
                         //通知完成
                         notifyFinish(path, orgFileName, mapInfo);
                     } else {
@@ -195,20 +211,53 @@ public class TxtIOStreamReader implements StreamReader {
                         String fileSplitName = splitParentPath + "/" + fileName;
                         writerToFile(fileSplitName, result);
                         //信息转换-----
-                        mapInfo.put(1, setMapInfo(1, 1, fileLength, path, fileSplitName));
+                        TxtInfo txInfo = setMapInfo(1, 1, fileLength, path, fileSplitName);
+                        mapInfo.put(1, txInfo);
                         //通知外部----
-                        notifyProgress(splitParentPath, fileSplitName, 1, 1);
+                        notifyProgress(splitParentPath, fileSplitName, txInfo);
                         notifyFinish(path, orgFileName, mapInfo);
                     }
                 } catch (Exception e) {
-                    notifyError(e);
+                    notifyError(1, e);
                 }
             }
         });
     }
 
     @Override
+    public void read(Context context, TxtInfo txtInfo) throws Exception {
+        TxtExecutorsManager.getInstance().getCacheExecutors(txtInfo.getOrgPath()).execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File cacheFileName = new File(txtInfo.getTrainPath());
+                    int cacheFileSize = (int) cacheFileName.length();
+                    byte[] buff = new byte[cacheFileSize];
+                    FileInputStream cacheInputStream = new FileInputStream(cacheFileName);
+                    cacheInputStream.read(buff, 0, cacheFileSize);
+                    cacheInputStream.close();
+                    String result = new String(buff, FORMAT_UTF8);
+                    //赋值-----------------------
+                    TxtReadInfo info = new TxtReadInfo();
+                    info.setContent(result);
+                    info.setPos(txtInfo.getPos());
+                    info.setOrgPath(txtInfo.getOrgPath());
+                    info.setSize(txtInfo.getSize());
+                    info.setTotal(txtInfo.getTotal());
+                    info.setTrainPath(txtInfo.getTrainPath());
+                    //通知外部-----------------------
+                    notifyRead(info);
+                } catch (Exception e) {
+                    notifyError(2, e);
+                }
+            }
+        });
+
+    }
+
+    @Override
     public void cancel(Context context, String path) throws Exception {
+        mOut.set(true);
         TxtExecutorsManager.getInstance().closeCacheExecutors(path);
     }
 

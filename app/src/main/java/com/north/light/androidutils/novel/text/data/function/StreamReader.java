@@ -2,6 +2,8 @@ package com.north.light.androidutils.novel.text.data.function;
 
 import android.content.Context;
 
+import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
+
 /**
  * @Author: lzt
  * @Date: 2022/2/8 14:40
@@ -9,11 +11,28 @@ import android.content.Context;
  */
 public interface StreamReader {
 
-    void load(Context context, String path) throws Exception;
+    /**
+     * 分割文件
+     */
+    void split(Context context, String path) throws Exception;
 
+    /**
+     * 读取文件所有信息
+     */
+    void read(Context context, TxtInfo txtInfo) throws Exception;
+
+    /**
+     * 取消文件一切操作
+     */
     void cancel(Context context, String path) throws Exception;
 
+    /**
+     * 设置监听
+     */
     void setOnLoadingListener(TxtLoadingListener loadingListener);
 
+    /**
+     * 移除监听
+     */
     void removeLoadingListener(TxtLoadingListener loadingListener);
 }

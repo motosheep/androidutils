@@ -1,5 +1,8 @@
 package com.north.light.androidutils.novel.text.data.function;
 
+import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
+import com.north.light.androidutils.novel.text.data.bean.TxtReadInfo;
+
 import java.util.Map;
 
 /**
@@ -12,21 +15,31 @@ public interface TxtLoadingListener {
     /**
      * @param path  切割文件的路径
      * @param name  切割文件的名字
-     * @param pos   排序位置
-     * @param total 总数量
+     * @param info
      */
-    void loadingPart(String path, String name, int pos, int total);
+    void splitPart(String path, String name, TxtInfo info);
 
     /**
      * @param path    原始文件路径
      * @param name    原始文件名字
      * @param infoMap 切割后的map集合
      */
-    void loadingFinish(String path, String name, Map<Integer, TxtInfo> infoMap);
+    void splitFinish(String path, String name, Map<Integer, TxtInfo> infoMap);
 
 
     /**
      * @param e 异常exception
      */
-    void loadFailed(Exception e);
+    void splitFailed(Exception e);
+
+    /**
+     * 读取文件
+     * */
+    void read(TxtReadInfo info);
+
+    /**
+     * 读取失败
+     * */
+    void readFailed(Exception e);
+
 }

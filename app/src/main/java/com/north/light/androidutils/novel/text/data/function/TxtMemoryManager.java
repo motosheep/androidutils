@@ -1,6 +1,14 @@
 package com.north.light.androidutils.novel.text.data.function;
 
+import android.text.TextUtils;
+
+import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
+import com.north.light.androidutils.novel.text.data.bean.TxtReadInfo;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -12,9 +20,17 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TxtMemoryManager implements Serializable {
     /**
-     * 小说map集合--只保留了分割后路径和大小等，没有保留具体信息
+     * txt map集合--内容
      */
-    private ConcurrentMap<String, Map<Integer, TxtInfo>> txtMap = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Map<Integer, TxtReadInfo>> txtMap = new ConcurrentHashMap<>();
+    /**
+     * txt map集合--摘要
+     */
+    private ConcurrentMap<String, Map<Integer, TxtInfo>> txtSumMap = new ConcurrentHashMap<>();
+    /**
+     * 当前阅读的txt集合
+     */
+    private List<String> currentListStr = new ArrayList<>();
 
     public static class SingleHolder implements Serializable {
         static TxtMemoryManager mInstance = new TxtMemoryManager();
@@ -24,8 +40,114 @@ public class TxtMemoryManager implements Serializable {
         return SingleHolder.mInstance;
     }
 
-    public void set(String path, Map<Integer, TxtInfo> mapInfo) {
-        txtMap.put(path, mapInfo);
+
+    //当前txt------------------------------------------------------------------------------------
+
+    /**
+     * 调整当前阅读的数据集合
+     */
+    public void resetCurList(List<String> org) {
+        clearCur();
+        currentListStr.addAll(org);
     }
 
+    /**
+     * 当前阅读的数据集合
+     */
+    public List<String> getCurList() {
+        return currentListStr;
+    }
+
+    /**
+     * 清空
+     */
+    public void clearCur() {
+        currentListStr.clear();
+    }
+
+    /**
+     * 添加
+     */
+    public void addCur(List<String> str) {
+        currentListStr.addAll(str);
+    }
+
+
+    //摘要---------------------------------------------------------------------------------------
+
+    /**
+     * 清空某个txt的内存缓存
+     */
+    public void clearSum(String path) {
+        txtSumMap.remove(path);
+    }
+
+    /**
+     * 增加某个txt的缓存
+     */
+    public void addSum(String path, TxtInfo info) {
+        //检查数据
+        if (info.getTotal() == 0 || info.getSize() == 0 || info.getPos() == 0 ||
+                TextUtils.isEmpty(info.getOrgPath()) ||
+                TextUtils.isEmpty(info.getTrainPath())) {
+            return;
+        }
+        //写入数据
+        Map<Integer, TxtInfo> map = txtSumMap.get(path);
+        if (map == null) {
+            map = new HashMap<>();
+        }
+        map.put(info.getPos(), info);
+        txtSumMap.put(path, map);
+    }
+
+    /**
+     * 获取某个位置的数据
+     */
+    public TxtInfo getSum(String path, int pos) {
+        Map<Integer, TxtInfo> map = txtSumMap.get(path);
+        if (map == null) {
+            return null;
+        }
+        return map.get(pos);
+    }
+    //内容---------------------------------------------------------------------------------------
+
+    /**
+     * 清空某个txt的内存缓存
+     */
+    public void clearContent(String path) {
+        txtMap.remove(path);
+    }
+
+    /**
+     * 增加某个txt的缓存
+     */
+    public void addContent(String path, TxtReadInfo info) {
+        //检查数据
+        if (info.getTotal() == 0 || info.getSize() == 0 || info.getPos() == 0 ||
+                TextUtils.isEmpty(info.getContent()) ||
+                TextUtils.isEmpty(info.getOrgPath()) ||
+                TextUtils.isEmpty(info.getTrainPath())) {
+            return;
+        }
+        //写入数据
+        Map<Integer, TxtReadInfo> map = txtMap.get(path);
+        if (map == null) {
+            map = new HashMap<>();
+        }
+        map.put(info.getPos(), info);
+        txtMap.put(path, map);
+    }
+
+    /**
+     * 获取某个位置的数据
+     */
+    public TxtReadInfo getContent(String path, int pos) {
+        Map<Integer, TxtReadInfo> map = txtMap.get(path);
+        if (map == null) {
+            return null;
+        }
+        return map.get(pos);
+    }
 }
