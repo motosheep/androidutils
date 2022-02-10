@@ -6,11 +6,15 @@ import android.os.Environment;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.north.light.androidutils.R;
-import com.north.light.androidutils.novel.text.data.TxtIOStreamReader;
+import com.north.light.androidutils.log.LogUtil;
+import com.north.light.androidutils.novel.text.data.TxtManager;
+import com.north.light.androidutils.novel.text.data.function.TxtInfo;
+import com.north.light.androidutils.novel.text.data.function.TxtLoadingListener;
 import com.north.light.androidutils.novel.text.read.ReaderView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NovelActivity extends AppCompatActivity {
 
@@ -20,22 +24,45 @@ public class NovelActivity extends AppCompatActivity {
     private List<String> data = new ArrayList<>();
     private int pos = 0;
 
+    private TxtLoadingListener listener = new TxtLoadingListener() {
+        @Override
+        public void loadingPart(String path, String name, int pos, int total) {
+            LogUtil.d("加载loadingPart: path" + path + "\tname:" + name + "\tpos:" + pos + "\ttotal:" + total);
+        }
+
+        @Override
+        public void loadingFinish(String path, String name, Map<Integer, TxtInfo> infoMap) {
+            LogUtil.d("加载loadingFinish: path" + path + "\tname:" + name);
+        }
+
+        @Override
+        public void loadFailed(Exception e) {
+            LogUtil.d("loadFailed e:" + e.getMessage());
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        try {
+            TxtManager.getInstance().cancel(NovelActivity.this, Environment.getExternalStorageDirectory().getPath() + "/novel.txt");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        TxtManager.getInstance().removeLoadingListener(listener);
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novel);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TxtIOStreamReader reader = new TxtIOStreamReader();
-                try {
-                    reader.load(NovelActivity.this, Environment.getExternalStorageDirectory().getPath()+"/novel.txt");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
         readView = findViewById(R.id.activity_novel);
+        try {
+            TxtManager.getInstance().setOnLoadingListener(listener);
+            TxtManager.getInstance().loadTxt(NovelActivity.this, Environment.getExternalStorageDirectory().getPath() + "/novel.txt");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //设置显示数据
         data.add("从前有座山");
         data.add("山上有座庙");

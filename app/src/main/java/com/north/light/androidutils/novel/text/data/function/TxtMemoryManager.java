@@ -1,7 +1,7 @@
-package com.north.light.androidutils.novel.text.data;
+package com.north.light.androidutils.novel.text.data.function;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -12,10 +12,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TxtMemoryManager implements Serializable {
     /**
-     * 小说map集合
+     * 小说map集合--只保留了分割后路径和大小等，没有保留具体信息
      */
-    private ConcurrentMap<String, List<String>> txtMap = new ConcurrentHashMap<>();
-
+    private ConcurrentMap<String, Map<Integer, TxtInfo>> txtMap = new ConcurrentHashMap<>();
 
     public static class SingleHolder implements Serializable {
         static TxtMemoryManager mInstance = new TxtMemoryManager();
@@ -25,8 +24,8 @@ public class TxtMemoryManager implements Serializable {
         return SingleHolder.mInstance;
     }
 
-    public void set(String path, List<String> strList) {
-        txtMap.put(path, strList);
+    public void set(String path, Map<Integer, TxtInfo> mapInfo) {
+        txtMap.put(path, mapInfo);
     }
 
 }
