@@ -109,17 +109,14 @@ public class TxtManager implements TxtManagerApi {
             public void splitPart(String path, String name, TxtInfo info) {
                 LogUtil.d("加载loadingPart: path" + path + "\tname:" + name + "\tinfo:" + GsonUtils.getJsonStr(info));
                 TxtMemoryManager.getInstance().addSum(mCurrentPath, info);
-                if (mFirstLoad.get()) {
-                    mFirstLoad.set(false);
-                    //读取第一个数据-----
-                    try {
+                //不断分割不断读取
+                try {
+                    if (mFirstLoad.get()) {
+                        mFirstLoad.set(false);
                         loadSplitFile(info);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                } else {
-                    //不用读取数据
-                    mIsLoading.set(false);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -143,8 +140,11 @@ public class TxtManager implements TxtManagerApi {
                 TxtMemoryManager.getInstance().addCur(txList);
                 mIsLoading.set(false);
                 if (mFirstRead.get()) {
-                    notifyInit();
                     mFirstRead.set(false);
+                    long memorySize = TxtMemoryManager.getInstance().getCurLength();
+                    int totalPage = (int) (memorySize / mPageSize);
+                    mCurPos = Math.min(totalPage, mCurPos);
+                    notifyInit();
                 } else if (mNextRead.get()) {
                     mNextRead.set(false);
                     notifyAutoNext();
@@ -164,13 +164,13 @@ public class TxtManager implements TxtManagerApi {
         if (TextUtils.isEmpty(path)) {
             return;
         }
-        mCurPos = 0;
+        mCurPos = readPos;
         mCurrentPath = path;
         mPageSize = pageSize;
         mIsLoadFinish.set(false);
         mIsLoading.set(true);
-        mFirstLoad.set(true);
         mFirstRead.set(true);
+        mFirstLoad.set(true);
         mNextRead.set(false);
         cancel(context, path);
         TxtMemoryManager.getInstance().clearCur();

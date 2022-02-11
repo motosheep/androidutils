@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @Author: lzt
@@ -30,7 +31,7 @@ public class TxtMemoryManager implements Serializable {
     /**
      * 当前阅读的txt集合
      */
-    private List<String> currentListStr = new ArrayList<>();
+    private CopyOnWriteArrayList<String> currentListStr = new CopyOnWriteArrayList<>();
 
     public static class SingleHolder implements Serializable {
         static TxtMemoryManager mInstance = new TxtMemoryManager();
@@ -56,6 +57,16 @@ public class TxtMemoryManager implements Serializable {
      */
     public List<String> getCurList() {
         return currentListStr;
+    }
+    /**
+     * 当前阅读的数据总长度
+     */
+    public long getCurLength() {
+        long total = 0;
+        for(String s :currentListStr){
+            total = total+s.length();
+        }
+        return total;
     }
 
     /**

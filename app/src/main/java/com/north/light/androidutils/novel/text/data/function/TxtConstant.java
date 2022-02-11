@@ -16,7 +16,7 @@ public class TxtConstant implements Serializable {
     /**
      * 文件切割大小
      */
-    public static final int SPLIT_SIZE = 1 * 1024 * 300;
+    public static final int SPLIT_SIZE = 1 * 1024 * 3;
 
     /**
      * 文件切割路径
