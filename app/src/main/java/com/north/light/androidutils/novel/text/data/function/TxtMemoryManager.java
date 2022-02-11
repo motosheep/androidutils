@@ -76,6 +76,13 @@ public class TxtMemoryManager implements Serializable {
     //摘要---------------------------------------------------------------------------------------
 
     /**
+     * 获取摘要数量
+     * */
+    public int getSumSize() {
+        return txtSumMap.size();
+    }
+
+    /**
      * 清空某个txt的内存缓存
      */
     public void clearSum(String path) {

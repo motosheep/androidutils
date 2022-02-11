@@ -37,7 +37,7 @@ public class NovelActivity extends AppCompatActivity {
             public void count(int count) {
                 try {
                     TxtManager.getInstance().loadData(NovelActivity.this,
-                            Environment.getExternalStorageDirectory().getPath() + "/novel.txt", count);
+                            Environment.getExternalStorageDirectory().getPath() + "/novel.txt", count, 20);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

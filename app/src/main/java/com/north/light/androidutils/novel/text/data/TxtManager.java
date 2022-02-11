@@ -28,20 +28,22 @@ public class TxtManager implements TxtManagerApi {
     private StreamReader streamReader;
     //当前文件的path
     private String mCurrentPath;
+    //每页显示字体大小
     private int mPageSize;
+    //监听集合
     private CopyOnWriteArrayList<TxtManagerListener> mListener = new CopyOnWriteArrayList<>();
+    //全局context
+    private Context mContext;
     //首次读取，初始化相关信息
     private AtomicBoolean mFirstLoad = new AtomicBoolean(true);
     private AtomicBoolean mFirstRead = new AtomicBoolean(true);
     private AtomicBoolean mNextRead = new AtomicBoolean(false);
+    private AtomicBoolean mIsLoading = new AtomicBoolean(true);
+    private AtomicBoolean mIsLoadFinish = new AtomicBoolean(false);
     //当前阅读位置
     private int mCurPos = 0;
     //当前分页位置
     private int mCurMapInfoPos = 1;
-    //是否加载中
-    private AtomicBoolean mIsLoading = new AtomicBoolean(true);
-    //全局context
-    private Context mContext;
 
     public static class SingleHolder implements Serializable {
         static TxtManager mInstance = new TxtManager();
@@ -59,7 +61,6 @@ public class TxtManager implements TxtManagerApi {
      * 读取分割文件数据
      */
     private void loadSplitFile(TxtInfo info) throws Exception {
-        mIsLoading.set(true);
         streamReader.read(mContext, info);
     }
 
@@ -78,6 +79,20 @@ public class TxtManager implements TxtManagerApi {
     private void notifyAutoNext() {
         for (TxtManagerListener listener : mListener) {
             listener.autoNext();
+        }
+    }
+
+    /**
+     * 加载下一页数据
+     */
+    private void loadNextPage() {
+        try {
+            TxtInfo txtInfo = TxtMemoryManager.getInstance().getSum(mCurrentPath, mCurMapInfoPos);
+            loadSplitFile(txtInfo);
+            mIsLoading.set(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mIsLoading.set(false);
         }
     }
 
@@ -102,17 +117,22 @@ public class TxtManager implements TxtManagerApi {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else {
+                    //不用读取数据
+                    mIsLoading.set(false);
                 }
             }
 
             @Override
             public void splitFinish(String path, String name, Map<Integer, TxtInfo> infoMap) {
                 LogUtil.d("加载loadingFinish: path" + path + "\tname:" + name);
+                mIsLoadFinish.set(true);
             }
 
             @Override
             public void splitFailed(Exception e) {
                 LogUtil.d("加载loadFailed e:" + e.getMessage());
+                mIsLoading.set(false);
             }
 
             @Override
@@ -123,8 +143,8 @@ public class TxtManager implements TxtManagerApi {
                 TxtMemoryManager.getInstance().addCur(txList);
                 mIsLoading.set(false);
                 if (mFirstRead.get()) {
-                    mFirstRead.set(false);
                     notifyInit();
+                    mFirstRead.set(false);
                 } else if (mNextRead.get()) {
                     mNextRead.set(false);
                     notifyAutoNext();
@@ -140,13 +160,15 @@ public class TxtManager implements TxtManagerApi {
     }
 
     @Override
-    public void loadData(Context context, String path, int pageSize) throws Exception {
+    public void loadData(Context context, String path, int pageSize, int readPos) throws Exception {
         if (TextUtils.isEmpty(path)) {
             return;
         }
         mCurPos = 0;
         mCurrentPath = path;
         mPageSize = pageSize;
+        mIsLoadFinish.set(false);
+        mIsLoading.set(true);
         mFirstLoad.set(true);
         mFirstRead.set(true);
         mNextRead.set(false);
@@ -175,7 +197,7 @@ public class TxtManager implements TxtManagerApi {
      */
     @Override
     public void change(int type) {
-        if (mIsLoading.get()) {
+        if (isLoading()) {
             return;
         }
         List<String> data = TxtMemoryManager.getInstance().getCurList();
@@ -193,14 +215,8 @@ public class TxtManager implements TxtManagerApi {
                 mCurPos = mCurPos - 1;
             }
             //自动加载下一个数据集合
-            try {
-                TxtInfo txtInfo = TxtMemoryManager.getInstance().getSum(mCurrentPath, mCurMapInfoPos);
-                loadSplitFile(txtInfo);
-                mNextRead.set(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                mIsLoading.set(false);
-            }
+            mNextRead.set(true);
+            loadNextPage();
         } else {
             //中间
             if (type == -1) {
@@ -216,6 +232,9 @@ public class TxtManager implements TxtManagerApi {
      */
     @Override
     public String getShowContent(int type) {
+        if (isLoading()) {
+            return "";
+        }
         List<String> data = TxtMemoryManager.getInstance().getCurList();
         if (data == null || data.size() == 0) {
             return "";
@@ -238,6 +257,11 @@ public class TxtManager implements TxtManagerApi {
                 return data.get(mCurPos + 1);
         }
         return "";
+    }
+
+    @Override
+    public boolean isLoading() {
+        return mIsLoading.get();
     }
 
     //监听

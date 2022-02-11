@@ -16,8 +16,11 @@ public interface TxtManagerApi {
 
     /**
      * 加载数据
+     *
+     * @param pageSize 每一页显示字体的大小
+     * @param readPos  上次阅读的list下标
      */
-    void loadData(Context context, String path, int pageSize) throws Exception;
+    void loadData(Context context, String path, int pageSize, int readPos) throws Exception;
 
     /**
      * 取消
@@ -37,6 +40,11 @@ public interface TxtManagerApi {
      * @param type -1上一页 0当前页 1下一页
      */
     String getShowContent(int type) throws Exception;
+
+    /**
+     * 是否加载中
+     * */
+    boolean isLoading();
 
     /**
      * 设置监听
