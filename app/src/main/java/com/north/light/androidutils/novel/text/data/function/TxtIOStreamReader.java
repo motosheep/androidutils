@@ -169,10 +169,14 @@ public class TxtIOStreamReader implements StreamReader {
                         }
                         String cacheStr;
                         StringBuilder stringBuilder = new StringBuilder();
+                        int spaceCount = 0;
                         while ((cacheStr = bre.readLine()) != null && !mOut.get()) {
-                            stringBuilder.append(cacheStr);
+                            stringBuilder.append(cacheStr).append("\n");
+                            if (TextUtils.isEmpty(cacheStr.trim())) {
+                                spaceCount = spaceCount + 1;
+                            }
                             cacheCount = cacheCount + cacheStr.getBytes().length;
-                            if (cacheCount > TxtConstant.SPLIT_SIZE) {
+                            if (cacheCount > TxtConstant.SPLIT_SIZE || spaceCount >= 3) {
                                 String fileName = getSplitName(path, String.valueOf(count));
                                 String fileSplitName = splitParentPath + "/" + fileName;
                                 writerToFile(fileSplitName, stringBuilder.toString());
@@ -183,6 +187,7 @@ public class TxtIOStreamReader implements StreamReader {
                                 //同步中间变量----------------------------
                                 count = count + 1;
                                 cacheCount = 0;
+                                spaceCount = 0;
                                 stringBuilder = new StringBuilder();
                             }
                         }

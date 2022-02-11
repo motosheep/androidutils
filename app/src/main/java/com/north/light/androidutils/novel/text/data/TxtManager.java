@@ -204,6 +204,14 @@ public class TxtManager implements TxtManagerApi {
         if (data == null || data.size() == 0) {
             return;
         }
+        if (data.size() == 1) {
+            if (type == 1) {
+                //自动加载下一个数据集合
+                mNextRead.set(true);
+                loadNextPage();
+                return;
+            }
+        }
         if (mCurPos == 0) {
             //第一个
             if (type == 1) {
@@ -236,6 +244,9 @@ public class TxtManager implements TxtManagerApi {
             return "";
         }
         List<String> data = TxtMemoryManager.getInstance().getCurList();
+        if (mCurPos >= data.size()) {
+            return "";
+        }
         if (data == null || data.size() == 0) {
             return "";
         }
