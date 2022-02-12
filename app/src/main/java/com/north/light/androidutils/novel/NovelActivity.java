@@ -34,13 +34,18 @@ public class NovelActivity extends AppCompatActivity {
         readView = findViewById(R.id.activity_novel);
         readView.setTextStatusListener(new ReaderBaseView.TextStatusListener() {
             @Override
-            public void count(int count) {
+            public void maxDraw(int count) {
                 try {
                     TxtManager.getInstance().loadData(NovelActivity.this,
                             Environment.getExternalStorageDirectory().getPath() + "/novel.txt", count, 20);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void trueDraw(int count) {
+
             }
         });
         readView.setReadEventListener(new ReaderView.ReadEventListener() {

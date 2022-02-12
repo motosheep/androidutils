@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.north.light.androidutils.novel.text.tv.FitTextListener;
-import com.north.light.androidutils.novel.text.tv.FitTextView;
+import com.north.light.androidutils.novel.text.tv.FitAutoTextListener;
+import com.north.light.androidutils.novel.text.tv.FitAutoTextView;
 
 /**
  * @Author: lzt
@@ -14,13 +14,14 @@ import com.north.light.androidutils.novel.text.tv.FitTextView;
  * @Description:阅读view
  */
 public abstract class ReaderBaseView extends RelativeLayout implements ReaderViewApi {
-    protected FitTextView preTxView;
-    protected FitTextView curTxView;
-    protected FitTextView nextTxView;
-    protected FitTextView showTxView;
+    protected FitAutoTextView preTxView;
+    protected FitAutoTextView curTxView;
+    protected FitAutoTextView nextTxView;
+    protected FitAutoTextView showTxView;
     private TextStatusListener mListener;
     //count缓存
-    private int mDrawCountCache = -1;
+    private int mMaxDrawCountCache = -1;
+    private int mTrueDrawCountCache = -1;
 
     public ReaderBaseView(Context context) {
         super(context);
@@ -37,13 +38,13 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
         init();
     }
 
-    public abstract FitTextView getPreTxView();
+    public abstract FitAutoTextView getPreTxView();
 
-    public abstract FitTextView getCurTxView();
+    public abstract FitAutoTextView getCurTxView();
 
-    public abstract FitTextView getNextTxView();
+    public abstract FitAutoTextView getNextTxView();
 
-    public abstract FitTextView getShowTxView();
+    public abstract FitAutoTextView getShowTxView();
 
 
     protected void init() {
@@ -80,34 +81,29 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
         curTxView.setVisibility(View.INVISIBLE);
         nextTxView.setVisibility(View.INVISIBLE);
 
-        preTxView.setOnTextListener(new FitTextListener() {
-            @Override
-            public void maxDrawCount(int count) {
 
+        curTxView.setOnTextListener(new FitAutoTextListener() {
+            @Override
+            public void trueDrawCount(int count) {
+                //实际绘制数量
+                if (mListener != null && mTrueDrawCountCache != count) {
+                    //防止重复回调
+                    mTrueDrawCountCache = count;
+                    mListener.trueDraw(count);
+                }
             }
-        });
-        curTxView.setOnTextListener(new FitTextListener() {
+
             @Override
             public void maxDrawCount(int count) {
-                if (mListener != null && mDrawCountCache != count) {
+                //最大绘制数量
+                if (mListener != null && mMaxDrawCountCache != count) {
                     //防止重复回调
-                    mDrawCountCache = count;
-                    mListener.count(count);
+                    mMaxDrawCountCache = count;
+                    mListener.maxDraw(count);
                 }
             }
         });
-        nextTxView.setOnTextListener(new FitTextListener() {
-            @Override
-            public void maxDrawCount(int count) {
 
-            }
-        });
-        showTxView.setOnTextListener(new FitTextListener() {
-            @Override
-            public void maxDrawCount(int count) {
-
-            }
-        });
     }
 
     /**
@@ -152,7 +148,9 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
 
     //监听
     public interface TextStatusListener {
-        void count(int count);
+        void maxDraw(int count);
+
+        void trueDraw(int count);
     }
 
     public void setTextStatusListener(TextStatusListener listener) {

@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.north.light.androidutils.novel.text.tv.FitTextView;
+import com.north.light.androidutils.novel.text.tv.FitAutoTextView;
 
 /**
  * @Author: lzt
@@ -18,10 +18,10 @@ public class ReaderView extends ReaderBaseView {
     //阅读模式
     private ReaderAnimMode mReadMode = ReaderAnimMode.ANIM_HORIZONTAL;
     //文字显示控件
-    private FitTextView mPreView;
-    private FitTextView mCurView;
-    private FitTextView mNextView;
-    private FitTextView mShowView;
+    private FitAutoTextView mPreView;
+    private FitAutoTextView mCurView;
+    private FitAutoTextView mNextView;
+    private FitAutoTextView mShowView;
     //点击的x,y
     private float mClickPosX, mClickPosY;
     //监听
@@ -41,10 +41,10 @@ public class ReaderView extends ReaderBaseView {
 
     @Override
     protected void init() {
-        mPreView = new FitTextView(getContext());
-        mCurView = new FitTextView(getContext());
-        mNextView = new FitTextView(getContext());
-        mShowView = new FitTextView(getContext());
+        mPreView = new FitAutoTextView(getContext());
+        mCurView = new FitAutoTextView(getContext());
+        mNextView = new FitAutoTextView(getContext());
+        mShowView = new FitAutoTextView(getContext());
         super.init();
         initEvent();
     }
@@ -134,22 +134,22 @@ public class ReaderView extends ReaderBaseView {
 
 
     @Override
-    public FitTextView getPreTxView() {
+    public FitAutoTextView getPreTxView() {
         return mPreView;
     }
 
     @Override
-    public FitTextView getCurTxView() {
+    public FitAutoTextView getCurTxView() {
         return mCurView;
     }
 
     @Override
-    public FitTextView getNextTxView() {
+    public FitAutoTextView getNextTxView() {
         return mNextView;
     }
 
     @Override
-    public FitTextView getShowTxView() {
+    public FitAutoTextView getShowTxView() {
         return mShowView;
     }
 
