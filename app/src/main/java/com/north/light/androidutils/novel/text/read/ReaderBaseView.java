@@ -82,13 +82,13 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
 
         preTxView.setOnTextListener(new FitTextListener() {
             @Override
-            public void drawCount(int count) {
+            public void maxDrawCount(int count) {
 
             }
         });
         curTxView.setOnTextListener(new FitTextListener() {
             @Override
-            public void drawCount(int count) {
+            public void maxDrawCount(int count) {
                 if (mListener != null && mDrawCountCache != count) {
                     //防止重复回调
                     mDrawCountCache = count;
@@ -98,13 +98,13 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
         });
         nextTxView.setOnTextListener(new FitTextListener() {
             @Override
-            public void drawCount(int count) {
+            public void maxDrawCount(int count) {
 
             }
         });
         showTxView.setOnTextListener(new FitTextListener() {
             @Override
-            public void drawCount(int count) {
+            public void maxDrawCount(int count) {
 
             }
         });

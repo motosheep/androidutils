@@ -12,14 +12,12 @@ import androidx.annotation.Nullable;
 
 import com.north.light.androidutils.R;
 
-import java.util.List;
-
 /**
  * @Author: lzt
  * @Date: 2022/2/7 14:07
  * @Description:自适应textview
  */
-public class FitTextView extends View {
+public class FitAutoTextView extends View {
     //画笔
     private Paint mTextPaint;
     //测量的字体
@@ -44,21 +42,21 @@ public class FitTextView extends View {
     private int padTop;
     private int padBottom;
     //监听
-    private FitTextListener mListener;
+    private FitAutoTextListener mListener;
     //剩余宽度填充
     private int mRestWidth = 0;
 
-    public FitTextView(Context context) {
+    public FitAutoTextView(Context context) {
         super(context);
         init();
     }
 
-    public FitTextView(Context context, @Nullable AttributeSet attrs) {
+    public FitAutoTextView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public FitTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FitAutoTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -120,27 +118,33 @@ public class FitTextView extends View {
         int padTopCache = padTop;
         int fontCacheHeight = mFontHeight;
         int heightCacheInterval = mHeightInterval;
-        //中间变量------------------
-        int rowCount = 1;
-        if (length > widthCacheSize) {
-            rowCount = (length / widthCacheSize) + 1;
-        }
+        //开始绘制------------------
         canvas.save();
-        //文字分割为单个字符数据
-        List<String> contentList = FitTextListSpilt.splitStr(mContent);
-        List<List<String>> colList = FitTextListSpilt.splitList(contentList, widthCacheSize);
-        for (int row = 0; row < rowCount; row++) {
-            //列
-            if (row < heightCacheSize && row < colList.size()) {
-                //在绘制范围内
-                int colSize = colList.get(row).size();
-                for (int col = 0; col < colSize; col++) {
-                    String content = colList.get(row).get(col);
-                    int startX = col * fontCacheWidth + fontCacheWidth / 2 + padLeftCache + mRestWidth / 2;
-                    int startY = (row + 1) * fontCacheHeight + padTopCache - (heightCacheInterval/2);
-                    canvas.drawText(content, startX, startY, mTextPaint);
+        int txDrawCounter = 0;
+        for (int h = 0; h < heightCacheSize; h++) {
+            if (txDrawCounter > mContent.length() - 1) {
+                break;
+            }
+            for (int w = 0; w < widthCacheSize; w++) {
+                if (txDrawCounter > mContent.length() - 1) {
+                    break;
+                }
+                //绘制
+                String txInfo = mContent.substring(txDrawCounter, txDrawCounter + 1);
+                txDrawCounter++;
+                if (txInfo.equals("\n")) {
+                    //换行
+                    break;
+                } else {
+                    //绘制
+                    int startX = w * fontCacheWidth + fontCacheWidth / 2 + padLeftCache + mRestWidth / 2;
+                    int startY = (h + 1) * fontCacheHeight + padTopCache - (heightCacheInterval / 2);
+                    canvas.drawText(txInfo, startX, startY, mTextPaint);
                 }
             }
+        }
+        if (mListener != null) {
+            mListener.trueDrawCount(txDrawCounter);
         }
         canvas.restore();
     }
@@ -156,7 +160,7 @@ public class FitTextView extends View {
     /**
      * 设置监听
      */
-    public void setOnTextListener(FitTextListener listener) {
+    public void setOnTextListener(FitAutoTextListener listener) {
         mListener = listener;
     }
 

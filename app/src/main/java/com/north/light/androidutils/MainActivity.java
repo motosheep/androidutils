@@ -20,6 +20,7 @@ import com.north.light.androidutils.drawer.DrawerActivity;
 import com.north.light.androidutils.location.LocationActivity;
 import com.north.light.androidutils.network.NetStatusActivity;
 import com.north.light.androidutils.novel.NovelActivity;
+import com.north.light.androidutils.novel.NovelWidgetActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDkSmartActivity;
@@ -65,6 +66,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //进入novel act
                 Intent intent = new Intent(MainActivity.this, NovelActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_novel_widget).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //进入novel act
+                Intent intent = new Intent(MainActivity.this, NovelWidgetActivity.class);
                 startActivity(intent);
             }
         });

@@ -32,7 +32,13 @@
             android:id="@+id/activity_main_novel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="novel--relative" />
+            android:text="novel--relative（小说）" />
+
+        <Button
+            android:id="@+id/activity_main_novel_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="novel--widget（小说控件）" />
 
         <Button
             android:id="@+id/activity_main_audio"

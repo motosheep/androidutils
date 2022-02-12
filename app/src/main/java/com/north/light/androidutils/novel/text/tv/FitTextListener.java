@@ -8,7 +8,8 @@ package com.north.light.androidutils.novel.text.tv;
 public interface FitTextListener {
 
     /**
-     * 绘制的字数
-     * */
-    void drawCount(int count);
+     * 最多可绘制的字数
+     */
+    void maxDrawCount(int count);
+
 }
