@@ -18,9 +18,7 @@ public class ReaderView extends ReaderBaseView {
     //阅读模式
     private ReaderAnimMode mReadMode = ReaderAnimMode.ANIM_HORIZONTAL;
     //文字显示控件
-    private FitAutoTextView mPreView;
     private FitAutoTextView mCurView;
-    private FitAutoTextView mNextView;
     private FitAutoTextView mShowView;
     //点击的x,y
     private float mClickPosX, mClickPosY;
@@ -41,9 +39,7 @@ public class ReaderView extends ReaderBaseView {
 
     @Override
     protected void init() {
-        mPreView = new FitAutoTextView(getContext());
         mCurView = new FitAutoTextView(getContext());
-        mNextView = new FitAutoTextView(getContext());
         mShowView = new FitAutoTextView(getContext());
         super.init();
         initEvent();
@@ -94,7 +90,6 @@ public class ReaderView extends ReaderBaseView {
         if (mListener != null) {
             mListener.change(-1);
         }
-        refreshData();
     }
 
     /**
@@ -105,47 +100,20 @@ public class ReaderView extends ReaderBaseView {
         if (mListener != null) {
             mListener.change(1);
         }
-        refreshData();
     }
 
     /**
-     * 初始化当前页
-     * */
-    public void initCurPage(){
-        if (mListener != null) {
-            mListener.change(0);
-        }
-        refreshData();
-    }
-
-    /**
-     * 刷新数据
+     * 初始化数据
      */
-    private void refreshData() {
+    public void initData(String content) {
         if (mListener != null) {
-            String preData = mListener.preData();
-            String curData = mListener.curData();
-            String nextData = mListener.nextData();
-            setTxContent(-1, preData);
-            setTxContent(0, curData);
-            setTxContent(1, nextData);
+            setTxContent(content);
         }
-    }
-
-
-    @Override
-    public FitAutoTextView getPreTxView() {
-        return mPreView;
     }
 
     @Override
     public FitAutoTextView getCurTxView() {
         return mCurView;
-    }
-
-    @Override
-    public FitAutoTextView getNextTxView() {
-        return mNextView;
     }
 
     @Override
@@ -180,11 +148,5 @@ public class ReaderView extends ReaderBaseView {
 
     public interface ReadEventListener {
         void change(int type);
-
-        String preData();
-
-        String curData();
-
-        String nextData();
     }
 }

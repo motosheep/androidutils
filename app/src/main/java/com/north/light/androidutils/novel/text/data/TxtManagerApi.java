@@ -17,10 +17,16 @@ public interface TxtManagerApi {
     /**
      * 加载数据
      *
-     * @param pageSize 每一页显示字体的大小
-     * @param readPos  上次阅读的list下标
+     * @param sectionPos 章节的页码--第几章
+     * @param detailPos  章节的页数--某章第几页
      */
-    void loadData(Context context, String path, int pageSize, int readPos) throws Exception;
+    void loadData(Context context, String path, int sectionPos, int detailPos) throws Exception;
+
+ /**
+     * 加载数据
+     */
+    void loadData(Context context, String path) throws Exception;
+
 
     /**
      * 取消
@@ -35,15 +41,8 @@ public interface TxtManagerApi {
     void change(int type) throws Exception;
 
     /**
-     * 获取不同的数据
-     *
-     * @param type -1上一页 0当前页 1下一页
-     */
-    String getShowContent(int type) throws Exception;
-
-    /**
      * 是否加载中
-     * */
+     */
     boolean isLoading();
 
     /**
@@ -55,4 +54,16 @@ public interface TxtManagerApi {
      * 移除监听
      */
     void removeTxtManagerListener(TxtManagerListener listener);
+
+
+    /**
+     * 设置每页数据最大读取的字体数量
+     */
+    void setPageMaxSize(int size);
+
+    /**
+     * 当前显示字体数量
+     * */
+    void setPageShowSize(int size);
+
 }

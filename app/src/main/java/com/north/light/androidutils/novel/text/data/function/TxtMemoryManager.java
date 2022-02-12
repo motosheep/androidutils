@@ -6,7 +6,6 @@ import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
 import com.north.light.androidutils.novel.text.data.bean.TxtReadInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +27,6 @@ public class TxtMemoryManager implements Serializable {
      * txt map集合--摘要
      */
     private ConcurrentMap<String, Map<Integer, TxtInfo>> txtSumMap = new ConcurrentHashMap<>();
-    /**
-     * 当前阅读的txt集合
-     */
-    private CopyOnWriteArrayList<String> currentListStr = new CopyOnWriteArrayList<>();
 
     public static class SingleHolder implements Serializable {
         static TxtMemoryManager mInstance = new TxtMemoryManager();
@@ -41,54 +36,11 @@ public class TxtMemoryManager implements Serializable {
         return SingleHolder.mInstance;
     }
 
-
-    //当前txt------------------------------------------------------------------------------------
-
-    /**
-     * 调整当前阅读的数据集合
-     */
-    public void resetCurList(List<String> org) {
-        clearCur();
-        currentListStr.addAll(org);
-    }
-
-    /**
-     * 当前阅读的数据集合
-     */
-    public List<String> getCurList() {
-        return currentListStr;
-    }
-    /**
-     * 当前阅读的数据总长度
-     */
-    public long getCurLength() {
-        long total = 0;
-        for(String s :currentListStr){
-            total = total+s.length();
-        }
-        return total;
-    }
-
-    /**
-     * 清空
-     */
-    public void clearCur() {
-        currentListStr.clear();
-    }
-
-    /**
-     * 添加
-     */
-    public void addCur(List<String> str) {
-        currentListStr.addAll(str);
-    }
-
-
     //摘要---------------------------------------------------------------------------------------
 
     /**
      * 获取摘要数量
-     * */
+     */
     public int getSumSize() {
         return txtSumMap.size();
     }
@@ -117,6 +69,17 @@ public class TxtMemoryManager implements Serializable {
         }
         map.put(info.getPos(), info);
         txtSumMap.put(path, map);
+    }
+
+    /**
+     * 增加某个txt的缓存
+     */
+    public void setSum(String path, Map<Integer, TxtInfo> info) {
+        if (info == null) {
+            return;
+        }
+        //写入数据
+        txtSumMap.put(path, info);
     }
 
     /**

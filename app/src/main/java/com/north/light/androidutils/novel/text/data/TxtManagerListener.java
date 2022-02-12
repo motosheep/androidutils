@@ -1,7 +1,5 @@
 package com.north.light.androidutils.novel.text.data;
 
-import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
-
 /**
  * @Author: lzt
  * @Date: 2022/2/10 14:43
@@ -9,9 +7,18 @@ import com.north.light.androidutils.novel.text.data.bean.TxtInfo;
  */
 public interface TxtManagerListener {
 
-    void info(TxtInfo info);
+    /**
+     * 读取书本错误
+     */
+    void readBookError(Exception e);
 
-    void init();
+    /**
+     * 准备完毕，可以进行初始化
+     */
+    void ready(String path,String preViewContent);
 
-    void autoNext();
+    /**
+     * 读取进度
+     */
+    void progress(String path, String trainPath, long curPos, long totalPos);
 }

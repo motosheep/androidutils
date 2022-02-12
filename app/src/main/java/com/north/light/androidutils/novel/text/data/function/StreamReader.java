@@ -19,7 +19,7 @@ public interface StreamReader {
     /**
      * 读取文件所有信息
      */
-    void read(Context context, TxtInfo txtInfo) throws Exception;
+    void read(Context context, TxtInfo txtInfo,String key) throws Exception;
 
     /**
      * 取消文件一切操作

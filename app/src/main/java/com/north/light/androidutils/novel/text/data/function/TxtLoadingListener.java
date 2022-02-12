@@ -35,11 +35,16 @@ public interface TxtLoadingListener {
     /**
      * 读取文件
      * */
-    void read(TxtReadInfo info);
+    void read(TxtReadInfo info,String key);
 
     /**
      * 读取失败
      * */
     void readFailed(Exception e);
+
+    /**
+     * 分割进度
+     * */
+    void splitProgress(String path,String trainPath,long progress,long total);
 
 }
