@@ -13,9 +13,11 @@ import com.north.light.androidutils.novel.text.data.function.TxtLoadingListener;
 import com.north.light.androidutils.novel.text.data.function.TxtMemoryManager;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author: lzt
@@ -31,7 +33,7 @@ public class TxtManager implements TxtManagerApi {
     //全局context
     private Context mContext;
     //当前阅读位置--------
-    //某章第几页
+    //某章阅读游标
     private int mDetailPos = 0;
     //第几章
     private int mSectionPos = 0;
@@ -43,6 +45,9 @@ public class TxtManager implements TxtManagerApi {
     private int mPageShowSize = 0;
     //当前章节内容
     private String mContent;
+    //当前阅读游标
+    private AtomicInteger mCachePos = new AtomicInteger(0);
+    private HashMap<Integer, Integer> mCachePosMap = new HashMap<>();
 
     public static class SingleHolder implements Serializable {
         static TxtManager mInstance = new TxtManager();
@@ -140,6 +145,18 @@ public class TxtManager implements TxtManagerApi {
         }
     }
 
+    private int getCachePos(int pos) {
+        Integer integer = mCachePosMap.get(pos);
+        if (integer == null) {
+            return 0;
+        }
+        return integer;
+    }
+
+    private void setCachePos(int pos, int count) {
+        mCachePosMap.put(pos, count);
+    }
+
     //外部调用---------------------------------------------------------------------------------------
 
     /**
@@ -193,6 +210,8 @@ public class TxtManager implements TxtManagerApi {
             return;
         }
         cancel(context, path);
+        mCachePosMap.clear();
+        mCachePos.set(0);
         mSectionPos = sectionPos;
         mDetailPos = detailPos;
         mCurrentPath = path;
@@ -228,15 +247,43 @@ public class TxtManager implements TxtManagerApi {
             return;
         }
         if (type == 1) {
+            if (mDetailPos + mPageShowSize >= mContent.length()) {
+                //加载下一章
+                int sumSize = TxtMemoryManager.getInstance().getSumSize(mCurrentPath);
+                if (mSectionPos > sumSize - 1) {
+                    return;
+                }
+                mSectionPos = mSectionPos + 1;
+                mDetailPos = 0;
+                readSection(TxtMemoryManager.getInstance().getSum(mCurrentPath));
+                return;
+            }
             //下一页
+            mCachePos.incrementAndGet();
             mDetailPos = mDetailPos + mPageShowSize;
-            String nextContent = mContent.substring(mDetailPos, mDetailPos + mPageMaxSize);
+            String nextContent = mContent.substring(mDetailPos, Math.min(mDetailPos + mPageMaxSize,mContent.length()));
             notifyReady(mCurrentPath, nextContent);
         } else if (type == -1) {
             //上一页
-            if (mDetailPos == 0) {
+            if (mDetailPos <= 0) {
+                //加载上一章
+                if (mSectionPos <= 1) {
+                    //没有上一章
+                    return;
+                }
+                mSectionPos = mSectionPos - 1;
+                mDetailPos = 0;
+                readSection(TxtMemoryManager.getInstance().getSum(mCurrentPath));
                 return;
             }
+            int posCount = getCachePos(mCachePos.get() - 1);
+            if (posCount == 0) {
+                return;
+            }
+            mDetailPos = mDetailPos - posCount;
+            mCachePos.decrementAndGet();
+            String nextContent = mContent.substring(mDetailPos, mDetailPos + posCount);
+            notifyReady(mCurrentPath, nextContent);
         }
     }
 
@@ -270,6 +317,7 @@ public class TxtManager implements TxtManagerApi {
     @Override
     public void setPageShowSize(int size) {
         mPageShowSize = size;
+        setCachePos(mCachePos.get(), mPageShowSize);
     }
 
 }

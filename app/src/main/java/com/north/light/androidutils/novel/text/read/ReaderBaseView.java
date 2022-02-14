@@ -52,16 +52,16 @@ public abstract class ReaderBaseView extends RelativeLayout implements ReaderVie
         curParams.width = LayoutParams.MATCH_PARENT;
         curParams.height = LayoutParams.MATCH_PARENT;
         curTxView.setLayoutParams(curParams);
-        curTxView.setVisibility(View.VISIBLE);
+        curTxView.setVisibility(View.INVISIBLE);
 
         RelativeLayout.LayoutParams showParams = (LayoutParams) showTxView.getLayoutParams();
         showParams.width = LayoutParams.MATCH_PARENT;
         showParams.height = LayoutParams.MATCH_PARENT;
-        showTxView.setLayoutParams(curParams);
-        showTxView.setVisibility(View.INVISIBLE);
+        showTxView.setLayoutParams(showParams);
+        showTxView.setVisibility(View.VISIBLE);
 
 
-        curTxView.setOnTextListener(new FitAutoTextListener() {
+        showTxView.setOnTextListener(new FitAutoTextListener() {
             @Override
             public void trueDrawCount(int count) {
                 //实际绘制数量

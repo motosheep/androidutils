@@ -41,8 +41,12 @@ public class TxtMemoryManager implements Serializable {
     /**
      * 获取摘要数量
      */
-    public int getSumSize() {
-        return txtSumMap.size();
+    public int getSumSize(String path) {
+        try{
+            return txtSumMap.get(path).size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     /**
@@ -92,6 +96,11 @@ public class TxtMemoryManager implements Serializable {
         }
         return map.get(pos);
     }
+
+    public Map<Integer, TxtInfo> getSum(String path) {
+        return txtSumMap.get(path);
+    }
+
     //内容---------------------------------------------------------------------------------------
 
     /**
