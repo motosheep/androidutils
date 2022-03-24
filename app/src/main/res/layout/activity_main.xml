@@ -107,6 +107,12 @@
             android:layout_height="wrap_content"
             android:text="图片处理--压缩/水印" />
 
+        <Button
+            android:id="@+id/activity_main_viewpager_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="viewpager播放视频" />
+
 
     </LinearLayout>
 

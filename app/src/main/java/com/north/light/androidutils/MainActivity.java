@@ -24,6 +24,7 @@ import com.north.light.androidutils.novel.NovelWidgetActivity;
 import com.north.light.androidutils.recyclerview.custom.test.XRecyActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDKXrecyclerviewActivity;
 import com.north.light.androidutils.recyclerview.sdk.SDkSmartActivity;
+import com.north.light.androidutils.viewpagervideo.ViewPagerVideoActivity;
 import com.north.light.androidutils.water.WaterActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -152,6 +153,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WaterActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_main_viewpager_video).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ViewPagerVideoActivity.class);
                 startActivity(intent);
             }
         });
