@@ -113,6 +113,12 @@
             android:layout_height="wrap_content"
             android:text="viewpager播放视频" />
 
+        <Button
+            android:id="@+id/activity_main_glide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="glide进度条加载" />
+
 
     </LinearLayout>
 

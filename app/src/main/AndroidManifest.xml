@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".viewpagervideo.ViewPagerVideoActivity"></activity>
+        <activity android:name=".glide.GlideLoadActivity"></activity>
+        <activity android:name=".viewpagervideo.ViewPagerVideoActivity" />
         <activity android:name=".novel.NovelWidgetActivity" />
         <activity
             android:name=".water.WaterActivity"
@@ -55,6 +56,10 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+        <!--glide 配置-->
+        <meta-data
+            android:name="com.north.light.androidutils.glide.func.GlideCache"
+            android:value="AppGlideModule" />
     </application>
 
 </manifest>
