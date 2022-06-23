@@ -11,6 +11,38 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/activity_main_canvas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="画布canvas" />
+
+        <Button
+            android:id="@+id/activity_external_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存图片到本地（适配安卓11）" />
+
+        <Button
+            android:id="@+id/activity_video_rote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视频播放旋转" />
+
+        <Button
+            android:id="@+id/activity_main_glide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="glide进度条加载" />
+
+
+        <Button
+            android:id="@+id/activity_main_viewpager_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="viewpager播放视频" />
+
+
+        <Button
             android:id="@+id/activity_main_coor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,11 +115,7 @@
             android:text="dagger" />
 
 
-        <Button
-            android:id="@+id/activity_main_canvas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="画布canvas" />
+
 
         <Button
             android:id="@+id/activity_main_ble"
@@ -106,20 +134,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="图片处理--压缩/水印" />
-
-        <Button
-            android:id="@+id/activity_main_viewpager_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="viewpager播放视频" />
-
-        <Button
-            android:id="@+id/activity_main_glide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="glide进度条加载" />
-
-
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

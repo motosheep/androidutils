@@ -18,7 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".glide.GlideLoadActivity"></activity>
+        <activity android:name=".external.SavePicActivity"></activity>
+        <activity
+            android:name=".landscope.VideoOrgActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name=".glide.GlideLoadActivity" />
         <activity android:name=".viewpagervideo.ViewPagerVideoActivity" />
         <activity android:name=".novel.NovelWidgetActivity" />
         <activity
@@ -55,8 +59,7 @@
         <activity android:name=".recyclerview.custom.test.XRecyActivity" /> <!-- 多渠道打包名字 -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
-        <!--glide 配置-->
+            android:value="${UMENG_CHANNEL_VALUE}" /> <!-- glide 配置 -->
         <meta-data
             android:name="com.north.light.androidutils.glide.func.GlideCache"
             android:value="AppGlideModule" />

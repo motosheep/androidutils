@@ -1,4 +1,4 @@
-package com.north.light.androidutils.canvas.view;
+package com.north.light.androidutils.canvas.linear;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.north.light.androidutils.R;
-import com.north.light.androidutils.canvas.bean.LinearInfo;
-import com.north.light.androidutils.canvas.builder.LinearBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

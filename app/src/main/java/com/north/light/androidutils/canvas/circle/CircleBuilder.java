@@ -1,7 +1,7 @@
-package com.north.light.androidutils.canvas.builder;
+package com.north.light.androidutils.canvas.circle;
 
 import com.north.light.androidutils.R;
-import com.north.light.androidutils.canvas.bean.CircleInfo;
+import com.north.light.androidutils.canvas.base.BaseChartBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.north.light.androidutils.canvas.view;
+package com.north.light.androidutils.canvas.circle;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.north.light.androidutils.R;
-import com.north.light.androidutils.canvas.bean.CircleInfo;
-import com.north.light.androidutils.canvas.builder.CircleBuilder;
+import com.north.light.androidutils.canvas.circle.CircleInfo;
+import com.north.light.androidutils.canvas.circle.CircleBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

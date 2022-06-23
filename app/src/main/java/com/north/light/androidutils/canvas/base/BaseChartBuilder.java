@@ -1,4 +1,4 @@
-package com.north.light.androidutils.canvas.builder;
+package com.north.light.androidutils.canvas.base;
 
 import java.io.Serializable;
 

@@ -17,7 +17,9 @@ import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutAppbarLay
 import com.north.light.androidutils.coordinatorLayout.CoordinatorLayoutBehaviorFirstActivity;
 import com.north.light.androidutils.dagger.DaggerActivity;
 import com.north.light.androidutils.drawer.DrawerActivity;
+import com.north.light.androidutils.external.SavePicActivity;
 import com.north.light.androidutils.glide.GlideLoadActivity;
+import com.north.light.androidutils.landscope.VideoOrgActivity;
 import com.north.light.androidutils.location.LocationActivity;
 import com.north.light.androidutils.network.NetStatusActivity;
 import com.north.light.androidutils.novel.NovelActivity;
@@ -168,6 +170,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, GlideLoadActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_video_rote).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, VideoOrgActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.activity_external_pic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SavePicActivity.class);
                 startActivity(intent);
             }
         });

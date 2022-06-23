@@ -12,12 +12,18 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
-        <com.north.light.androidutils.canvas.view.CircleChart
+        <com.north.light.androidutils.canvas.ability.AbilityChart
+            android:id="@+id/activity_canvas_ability"
+            android:layout_width="300dp"
+            android:layout_height="240dp" />
+
+        <com.north.light.androidutils.canvas.circle.CircleChart
             android:id="@+id/activity_canvas_circle"
             android:layout_width="300dp"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
 
-        <com.north.light.androidutils.canvas.view.LinearChart
+        <com.north.light.androidutils.canvas.linear.LinearChart
             android:id="@+id/activity_canvas_linear"
             android:layout_width="300dp"
             android:layout_height="300dp"
